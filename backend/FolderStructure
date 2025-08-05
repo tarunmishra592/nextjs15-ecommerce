@@ -1,0 +1,44 @@
+/backend
+├── src
+│   ├── config
+│   │   ├── config.ts           # environment configs (dotenv)
+│   │   └── db.ts               # MongoDB connection setup
+│   ├── schemas                 # Zod schemas for validation
+│   │   ├── authSchemas.ts
+│   │   ├── userSchemas.ts
+│   │   ├── productSchemas.ts
+│   │   └── orderSchemas.ts
+│   ├── middlewares
+│   │   ├── validate.ts         # generic Zod validation middleware
+│   │   ├── authMiddleware.ts   # JWT auth guard
+│   │   └── errorHandler.ts     # central error handler
+│   ├── models
+│   │   ├── User.ts
+│   │   ├── Product.ts
+│   │   ├── Order.ts
+│   │   ├── Address.ts
+│   │   └── Review.ts
+│   ├── services                # business logic layer
+│   │   ├── authService.ts
+│   │   ├── userService.ts
+│   │   ├── productService.ts
+│   │   └── orderService.ts
+│   ├── controllers            # request handlers
+│   │   ├── authController.ts
+│   │   ├── userController.ts
+│   │   ├── productController.ts
+│   │   └── orderController.ts
+│   ├── routes
+│   │   ├── authRoutes.ts
+│   │   ├── userRoutes.ts
+│   │   ├── productRoutes.ts
+│   │   └── orderRoutes.ts
+│   ├── utils
+│   │   ├── logger.ts
+│   │   └── token.ts           # JWT generation & refresh
+│   ├── app.ts                 # Express setup
+│   └── server.ts              # entry point
+├── .env.example
+├── package.json
+├── tsconfig.json
+└── README.md

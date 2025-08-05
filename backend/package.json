@@ -1,0 +1,46 @@
+{
+  "name": "ecommerce-backend",
+  "version": "1.0.0",
+  "description": "Backend API for e‑commerce app (Node.js, Express, TypeScript, Zod)",
+  "main": "dist/server.js",
+  "scripts": {
+    "dev": "nodemon --watch src --exec ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "seed": "ts-node -r dotenv/config src/seed/products.seed.ts",
+    "lint": "eslint . --ext .ts",
+    "test": "jest"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.8.7",
+    "morgan": "^1.10.1",
+    "razorpay": "^2.9.6",
+    "winston": "^3.17.0",
+    "zod": "^4.0.10"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/helmet": "^0.0.48",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.96",
+    "@types/morgan": "^1.9.10",
+    "@types/node": "^24.1.0",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "eslint": "^9.32.0",
+    "nodemon": "^3.1.10",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.8.3"
+  }
+}

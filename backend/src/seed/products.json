@@ -1,0 +1,155 @@
+[
+    {
+      "name": "Wireless Bluetooth Headphones",
+      "description": "Over-ear active noise cancelling headphones with long battery life.",
+      "price": 149.99,
+      "category": "Electronics",
+      "images": [
+        "https://images.unsplash.com/photo-1674989844487-722ec77b9b81?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1592041275490-dcac548bad2e?q=80&w=1935&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1679533662345-b321cf2d8792?q=80&w=667&auto=format&fit=crop"
+        ],
+      "stock": 50,
+      "tags": ["new", "electronics"]
+    },
+    {
+      "name": "Smart Fitness Watch",
+      "description": "Track steps, heart rate, workouts, and sleep patterns.",
+      "price": 99.99,
+      "category": "Wearables",
+      "images": [
+        "https://images.unsplash.com/photo-1635863885627-3af06bb72087?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1690580135882-0f3fc89a161c?q=80&w=687&auto=format&fit=crop",
+        "https://plus.unsplash.com/premium_photo-1712761998455-0222ec81418a?q=80&w=687&auto=format&fit=crop"
+        ],
+      "stock": 200,
+      "tags": ["featured", "new", "wearable"]
+    },
+    {
+      "name": "Portable Bluetooth Speaker",
+      "description": "Waterproof speaker with deep bass and 12h playtime.",
+      "price": 59.99,
+      "category": "Audio",
+      "images": ["https://images.unsplash.com/photo-1683643285944-0c54bea1280b?q=80&w=687&auto=format&fit=crop"],
+      "stock": 120,
+      "tags": ["sale", "audio"]
+    },
+    {
+      "name": "Wireless Mouse",
+      "description": "Ergonomic wireless mouse with adjustable DPI.",
+      "price": 29.99,
+      "category": "Accessories",
+      "images": ["https://images.unsplash.com/photo-1739742473235-34a7bd9b8f87?q=80&w=687&auto=format&fit=crop"],
+      "stock": 350,
+      "tags": ["accessory"]
+    },
+    {
+      "name": "Gaming Keyboard",
+      "description": "Mechanical RGB gaming keyboard with programmable keys.",
+      "price": 79.99,
+      "category": "Computers",
+      "images": ["https://images.unsplash.com/photo-1581351123004-757df051db8e?q=80&w=687&auto=format&fit=crop"],
+      "stock": 75,
+      "tags": ["new", "gaming"]
+    },
+    {
+      "name": "4K Action Camera",
+      "description": "Ultra HD camera for extreme sports and vlogging.",
+      "price": 199.99,
+      "category": "Cameras",
+      "images": ["https://images.unsplash.com/photo-1690176483702-7ee397871388?q=80&w=687&auto=format&fit=crop"],
+      "stock": 40,
+      "tags": ["electronics", "sale"]
+    },
+    {
+      "name": "Portable SSD 1TB",
+      "description": "Fast USB-C SSD storage for files and video editing.",
+      "price": 129.99,
+      "category": "Storage",
+      "images": ["https://plus.unsplash.com/premium_photo-1681702277248-6960dbb31b96?q=80&w=735&auto=format&fit=crop"],
+      "stock": 85,
+      "tags": ["new", "storage"]
+    },
+    {
+      "name": "Noise Cancelling Earbuds",
+      "description": "True wireless earbuds with ANC and touch controls.",
+      "price": 89.99,
+      "category": "Audio",
+      "images": ["https://plus.unsplash.com/premium_photo-1723478486546-83ea7cf40e1b?q=80&w=700&auto=format&fit=crop"],
+      "stock": 150,
+      "tags": ["featured", "audio"]
+    },
+    {
+      "name": "Smartphone Gimbal Stabilizer",
+      "description": "Handheld 3-axis stabilizer for smooth video recording.",
+      "price": 119.99,
+      "category": "Photography",
+      "images": ["https://images.unsplash.com/photo-1699854682793-1f5a3c832822?q=80&w=687&auto=format&fit=crop"],
+      "stock": 30,
+      "tags": ["new", "photography"]
+    },
+    {
+      "name": "Wireless Charging Pad",
+      "description": "Qi-certified fast wireless charger for smartphones.",
+      "price": 39.99,
+      "category": "Accessories",
+      "images": ["https://images.unsplash.com/photo-1737882171913-f4ced0ce73d8?q=80&w=688&auto=format&fit=crop"],
+      "stock": 220,
+      "tags": ["accessory"]
+    },
+    {
+      "name": "Smart Home Hub",
+      "description": "Voice-controlled smart home hub with Alexa built‑in.",
+      "price": 79.99,
+      "category": "Smart Home",
+      "images": ["https://images.unsplash.com/photo-1634090585775-0b1abed4b577?q=80&w=704&auto=format&fit=crop"],
+      "stock": 65,
+      "tags": ["featured", "smart-home"]
+    },
+    {
+      "name": "Digital SLR Camera Lens",
+      "description": "50mm prime lens for portrait and low‑light photography.",
+      "price": 249.99,
+      "category": "Photography",
+      "images": [
+        "https://images.unsplash.com/photo-1535815574082-bbb59241ad5b?q=80&w=686&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1735994895660-32291564eb2e?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1721310334458-bf790715824f?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1613413643687-f542f6b34969?q=80&w=687&auto=format&fit=crop"
+        ], 
+      "stock": 45,
+      "tags": ["photography"]
+    },
+    {
+      "name": "Action Gaming Chair",
+      "description": "Ergonomic gaming chair with lumbar support and RGB lighting.",
+      "price": 299.99,
+      "category": "Furniture",
+      "images": ["https://images.unsplash.com/photo-1670946839270-cc4febd43b09?q=80&w=688&auto=format&fit=crop"],
+      "stock": 25,
+      "tags": ["gaming", "featured"]
+    },
+    {
+      "name": "Fitness Band Tracker",
+      "description": "Slim fitness band for steps, calories, and sleep tracking.",
+      "price": 49.99,
+      "category": "Wearables",
+      "images": ["https://images.unsplash.com/photo-1582765114965-913ae716d5df?q=80&w=687&auto=format&fit=crop"],
+      "stock": 180,
+      "tags": ["new", "wearable"]
+    },
+    {
+      "name": "HD Webcam",
+      "description": "1080p USB webcam with built-in microphone and autofocus.",
+      "price": 69.99,
+      "category": "Computers",
+      "images": [
+        "https://images.unsplash.com/photo-1657357092389-49b1b254c1ac?q=80&w=765&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1666332100970-1fd5c53c6497?q=80&w=687&auto=format&fit=crop",
+        "https://images.unsplash.com/photo-1666726552129-122d69dbb7cf?q=80&w=687&auto=format&fit=crop"
+        ],
+      "stock": 150,
+      "tags": ["featured", "video"]
+    }
+  ]
+  
