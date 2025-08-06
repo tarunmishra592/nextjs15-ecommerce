@@ -28,7 +28,7 @@ export default async function ProductPage({ params }: Props) {
 
         {/* Product Info Section */}
         <div className="md:w-1/2 space-y-4">
-          <h1 className="text-3xl font-bold">{product.name}</h1>
+          <h1 className="text-3xl font-bold">{product?.name}</h1>
           
           {/* Rating */}
           <div className="flex items-center gap-2">
@@ -36,7 +36,7 @@ export default async function ProductPage({ params }: Props) {
               {[1, 2, 3, 4, 5].map((star) => (
                 <svg
                   key={star}
-                  className={`w-5 h-5 ${star <= Math.floor(product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
+                  className={`w-5 h-5 ${star <= Math.floor(product?.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -45,24 +45,24 @@ export default async function ProductPage({ params }: Props) {
               ))}
             </div>
             <span className="text-blue-600 hover:underline cursor-pointer">
-              {product.reviewCount ?? 0} Ratings
+              {product?.reviewCount ?? 0} Ratings
             </span>
           </div>
           
           <div className="border-t border-green-200 pt-4"></div>
           
-          <p className="text-2xl font-semibold text-green-600">₹{product.price.toFixed(2)}</p>
+          <p className="text-2xl font-semibold text-green-600">₹{product?.price?.toFixed(2)}</p>
           
           <div className="space-y-2">
             <p className="text-sm">
               <span className="font-semibold">Availability:</span> 
-              <span className={product.stock > 0 ? 'text-green-600' : 'text-red-600'}>
-                {product.stock > 0 ? ' In Stock' : ' Out of Stock'}
+              <span className={product?.stock > 0 ? 'text-green-600' : 'text-red-600'}>
+                {product?.stock > 0 ? ' In Stock' : ' Out of Stock'}
               </span>
             </p>
-            {product.category && (
+            {product?.category && (
               <p className="text-sm">
-                <span className="font-semibold">Category:</span> {product.category}
+                <span className="font-semibold">Category:</span> {product?.category}
               </p>
             )}
           </div>
@@ -70,7 +70,7 @@ export default async function ProductPage({ params }: Props) {
           <div className="border-t border-green-200 pt-4"></div>
           
           <h2 className="text-lg font-semibold">About this item</h2>
-          <p className="text-gray-700">{product.description}</p>
+          <p className="text-gray-700">{product?.description}</p>
           
           {/* Product Actions with Quantity */}
           <ProductActions 
