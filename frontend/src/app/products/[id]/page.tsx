@@ -17,11 +17,11 @@ export default async function ProductPage({ params }: Props) {
   const error = null;
 
   try {
-    let product = await apiFetch(`/products/${id}`);
-    let productReviews = await apiFetch(`/products/${id}/reviews`);
+    await apiFetch(`/products/${id}`);
+    await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
-    let error = err instanceof Error ? err.message : 'Unknown error';
-    console.error('API Error:', err);
+    const error = err instanceof Error ? err.message : 'Unknown error';
+    console.error('API Error:', error);
   }
 
   if (error) {
