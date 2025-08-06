@@ -17,6 +17,7 @@ const app = express();
 // Middlewares
 const allowedOrigins = [
     'https://nextjs15-ecommerce-rvcc.vercel.app', // Vercel frontend
+    'https://nextjs15-ecommerce-sooty.vercel.app',
     'http://localhost:3000', // local dev
     'http://localhost:3001' // local dev
   ];
