@@ -13,7 +13,7 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  const product: Product & { reviews?: Review[] } = await apiFetch(`/products/${id}`);
+  const product: Product = await apiFetch(`/products/${id}`);
   const productReviews: Review[] = await apiFetch(`/products/${id}/reviews`);
 
 
