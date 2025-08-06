@@ -16,20 +16,15 @@ const app = express();
 
 // Middlewares
 const allowedOrigins = [
-    'http://localhost:3000',
-    'https://your-frontend.vercel.app',
+    'https://nextjs15-ecommerce-95vc8entz-tarunmishra592s-projects.vercel.app', // Vercel frontend
+    'http://localhost:3000' // local dev
   ];
   
 app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: allowedOrigins,
     credentials: true,
 }));
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan('dev'));
