@@ -12,12 +12,12 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  let product: Product | null = null;
+  let product: any | null = null;
   // let productReviews: Review[] = [];
   let error = null;
 
   try {
-    product = await apiFetch(`/products/${id}`);
+    product = await fetch(`/products/${id}`);
     // productReviews = await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
     console.log(err)
