@@ -2,11 +2,10 @@
 import React, { ReactNode, useRef } from 'react';
 import { Provider } from 'react-redux';
 import { makeStore } from '@/store/store';
-import type { AppStore } from '@/store/store';
 import { Toaster } from 'react-hot-toast';
 
 export default function MainProvider({ children }: { children: ReactNode }) {
-  const storeRef = useRef<AppStore>(null);
+  const storeRef = useRef<any>(null);
   if (!storeRef.current) {
     storeRef.current = makeStore();
   }
