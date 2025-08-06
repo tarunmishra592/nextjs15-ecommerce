@@ -51,7 +51,7 @@ export default function LoginPage() {
         dispatch(fetchWishlist())
         router.push(next)
       } else {
-        setErrors({ password: res.error.message ?? 'Login failed' })
+        setErrors({ password: 'Login failed' })
       }
     } catch (error) {
       console.log(error)
