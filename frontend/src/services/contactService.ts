@@ -7,7 +7,7 @@ export async function submitContactForm(formData: {
     message: string
   }): Promise<{ success: boolean; message?: string }> {
     try {
-      const response = await apiFetch<{ success: boolean }>('/contact', {
+      await apiFetch<{ success: boolean }>('/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

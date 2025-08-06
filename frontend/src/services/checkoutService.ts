@@ -33,7 +33,7 @@ export const verifyPayment = (payload: PaymentVerificationPayload) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const result = await apiFetch('/payment/verify', {
+      const result: any = await apiFetch('/payment/verify', {
         method: 'POST',
         body: JSON.stringify(payload)
       });
