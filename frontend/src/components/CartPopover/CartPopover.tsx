@@ -1,27 +1,22 @@
 'use client'
 
 import { removeCartItem } from "@/services/cartService";
+import { useAppDispatch } from "@/store/store";
 import Image from "next/image";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { FiTrash2 } from "react-icons/fi";
-import { useDispatch } from "react-redux";
 
 
-export default function CartPopover({cartItems, isCartOpen, cartLen, setIsCartOpen}){
+export default function CartPopover({cartItems, isCartOpen, cartLen, setIsCartOpen}: any){
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
 
-    const handleRemoveItem = async (productId) => {
+    const handleRemoveItem = async (productId: string) => {
         try {
           // Dispatch the action and wait for it to complete
-          const result = dispatch(removeCartItem(productId));
-  
-          if (result) {
-            toast.success('Added to cart!');
-          } else{
-            toast.error('Failed to add to cart');
-          }
+          await dispatch(removeCartItem(productId));
+          toast.success('Added to cart!');
         } catch (error) {
           toast.error('An error occurred');
           console.error('Add to cart error:', error);
@@ -39,7 +34,7 @@ export default function CartPopover({cartItems, isCartOpen, cartLen, setIsCartOp
               <div className="p-4 max-h-96 overflow-y-auto">
                 <h3 className="font-medium text-lg mb-3">Your Cart ({cartLen})</h3>
                 <div className="space-y-4">
-                  {cartItems.map((item) => (
+                  {cartItems.map((item: any) => (
                     <div key={item.product._id} className={`flex items-center gap-3 pb-3 ${cartItems.length == 1 ? '' : 'border-b border-green-100'}`}>
                       <div className="relative w-16 h-16 flex-shrink-0">
                         <Link href={`products/${item._id}`}>

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { AuthState, AuthTokens, User, ApiErrorResponse } from '@/types';
+import type { AuthState, AuthTokens} from '@/types';
 import { RootState } from '../store';
 
 const initialState: AuthState = { 
@@ -27,7 +27,7 @@ export const authSlice = createSlice({
         state.token = token;
       }
     },
-    setUser(state, action: PayloadAction<User>) {
+    setUser(state, action: PayloadAction<any>) {
       state.user = action.payload;
     },
     
@@ -36,7 +36,7 @@ export const authSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    authFailed(state, action: PayloadAction<ApiErrorResponse>) {
+    authFailed(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
@@ -49,7 +49,7 @@ export const authSlice = createSlice({
       state.error = null;
       localStorage.setItem('token', action.payload.token);
     },
-    fetchUserSuccess(state, action: PayloadAction<User>) {
+    fetchUserSuccess(state, action: PayloadAction<any>) {
       state.loading = false;
       state.user = action.payload;
       state.error = null;

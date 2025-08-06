@@ -1,7 +1,7 @@
 // components/ProductCarousel/ProductCarousel.tsx
 'use client'
 
-import { Swiper, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
 import ProductCard from '../ProductCard/ProductCard'
 import { Product } from '@/types'
@@ -16,7 +16,7 @@ interface ProductCarouselProps {
 }
 
 export default function ProductCarousel({ title, products }: ProductCarouselProps) {
-  const swiperRef = useRef(null)
+  const swiperRef = useRef<any>(null)
 
   return (
     <section className="max-w-6xl mx-auto p-4">

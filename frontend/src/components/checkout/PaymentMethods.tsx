@@ -7,8 +7,9 @@ import { verifyPayment } from '@/services/checkoutService';
 import { selectShippingAddress } from '@/store/slices/checkoutSlice';
 import { selectCartTotal } from '@/store/slices/cartSlice';
 import { useSelector } from 'react-redux';
-import { RazorpayOrder } from '@/types';
+import { RazorpayOrder, User } from '@/types';
 import { apiFetch } from '@/lib/api';
+import { selectUser } from '@/store/slices/authSlice';
 
 type PaymentMethod = 'razorpay' | 'cod' | 'wallet';
 
@@ -31,7 +32,7 @@ export const PaymentMethods = () => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const dispatch = useAppDispatch();
-  const { user } = useSelector((state: RootState) => state.auth)
+  const user = useAppSelector(selectUser)
   const shippingAddress = useAppSelector(selectShippingAddress);
   const cartTotal = useAppSelector(selectCartTotal);
 
@@ -55,7 +56,8 @@ export const PaymentMethods = () => {
         dispatch(paymentInitiated({
           id: order.id,
           amount: order.amount,
-          currency: order.currency
+          currency: order.currency,
+          status: 'created'
         }));
         
         // 3. Load and open Razorpay

@@ -42,7 +42,7 @@ export default function AddressForm() {
       city: '',
       state: '',
       postalCode: '',
-      phone: user?.phone || '',
+      phone: '',
       country: 'India',
       saveAsDefault: false
     }
@@ -53,7 +53,7 @@ export default function AddressForm() {
     const fetchAddresses = async () => {
       if (user) {
         try {
-          const data = await apiFetch('/users/addresses')
+          const data: any = await apiFetch('/users/addresses')
           setAddresses(data)
           const defaultAddr = data.find((addr: any) => addr.saveAsDefault)
           if (defaultAddr) {
@@ -91,10 +91,10 @@ export default function AddressForm() {
 
   const onSubmit = async (values: z.infer<typeof addressSchema>) => {
     try {
-      let savedAddress = values
+      let savedAddress: any = values
       
       if (user) {
-        const response = await apiFetch('/users/addresses', {
+        const response: any = await apiFetch('/users/addresses', {
           method: 'POST',
           body: JSON.stringify(values)
         })

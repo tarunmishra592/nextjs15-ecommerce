@@ -36,7 +36,7 @@ export default function Filters({
   const [selectedColors, setSelectedColors] = useState<string[]>([])
   const [selectedSizes, setSelectedSizes] = useState<string[]>([])
 
-  const debounceTimeoutRef = useRef<NodeJS.Timeout>()
+  const debounceTimeoutRef = useRef<NodeJS.Timeout>(null)
   const lastFilterState = useRef<string>('')
 
   // Check if mobile on mount and resize

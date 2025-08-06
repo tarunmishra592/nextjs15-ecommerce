@@ -3,9 +3,9 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
 import { addCartItem } from '@/services/cartService';
 import useAuth from '@/hooks/useAuth';
+import { useAppDispatch } from '@/store/store';
 
 interface ProductActionsProps {
   productId: string;
@@ -13,8 +13,8 @@ interface ProductActionsProps {
   stock: number;
 }
 
-export default function ProductActions({ price, stock }: ProductActionsProps) {
-  const dispatch = useDispatch()
+export default function ProductActions({ productId, price, stock }: ProductActionsProps) {
+  const dispatch = useAppDispatch()
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const { isAuthenticated } = useAuth()
@@ -33,8 +33,7 @@ export default function ProductActions({ price, stock }: ProductActionsProps) {
   
     try {
       // Dispatch the action and wait for it to complete
-      const result = dispatch(addCartItem(product._id, quantity));
-
+      const result = await dispatch(addCartItem(productId, quantity));
       if (result) {
         toast.success('Added to cart!');
       } else{
