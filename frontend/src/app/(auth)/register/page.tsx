@@ -16,7 +16,6 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<SignupInput>({
     resolver: zodResolver(signupSchema),
   })

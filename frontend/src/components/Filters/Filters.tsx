@@ -19,7 +19,6 @@ interface FiltersProps {
 export default function Filters({
   categories,
   priceRange,
-  tags,
   colors,
   sizes
 }: FiltersProps) {

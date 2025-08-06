@@ -35,7 +35,7 @@ export function middleware(req: NextRequest) {
 
   // Handle auth paths when already logged in
   if (isAuthPath && token) {
-    const homeUrl = new URL('/', req.url);
+    // const homeUrl = new URL('/', req.url);
     // You might want to redirect to the original intended page
     // if it was stored somewhere (like in a 'next' query param)
     const redirectTo = req.nextUrl.searchParams.get('next') || '/';

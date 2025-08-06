@@ -3,7 +3,7 @@ import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
 import { setPaymentMethod, paymentInitiated, checkoutFailed } from '@/store/slices/checkoutSlice';
 import { Button } from '@/components/ui/button';
 import { loadRazorpay } from '@/lib/razorpay';
-import { initiatePayment, verifyPayment } from '@/services/checkoutService';
+import { verifyPayment } from '@/services/checkoutService';
 import { selectShippingAddress } from '@/store/slices/checkoutSlice';
 import { selectCartTotal } from '@/store/slices/cartSlice';
 import { useSelector } from 'react-redux';

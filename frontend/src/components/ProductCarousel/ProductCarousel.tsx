@@ -16,7 +16,7 @@ interface ProductCarouselProps {
 }
 
 export default function ProductCarousel({ title, products }: ProductCarouselProps) {
-  const swiperRef = useRef<any>(null)
+  const swiperRef = useRef(null)
 
   return (
     <section className="max-w-6xl mx-auto p-4">

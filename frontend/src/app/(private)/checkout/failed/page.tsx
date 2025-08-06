@@ -8,7 +8,7 @@ export default function FailedPage() {
       <BiXCircle className="mx-auto w-16 h-16 text-red-500 mb-4" />
       <h1 className="text-3xl font-bold mb-2">Payment Failed</h1>
       <p className="text-gray-600 mb-6">
-        We couldn't process your payment. Please try again or use a different payment method.
+        We couldn&apos;t process your payment. Please try again or use a different payment method.
       </p>
       <div className="flex gap-4 justify-center">
         <Link href="/checkout">

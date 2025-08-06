@@ -32,7 +32,6 @@ export default function NotFound() {
               >
                 <path 
                   strokeLinecap="round" 
-                  strokeLinecap="round" 
                   strokeWidth="1.5" 
                   d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
@@ -41,7 +40,7 @@ export default function NotFound() {
           </div>
 
           <p className="text-green-800">
-            Oops! The page you're looking for has vanished into the digital wilderness.
+            Oops! The page you are looking for has vanished into the digital wilderness.
           </p>
 
           {/* Interactive buttons */}

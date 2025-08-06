@@ -13,7 +13,7 @@ interface ProductActionsProps {
   stock: number;
 }
 
-export default function ProductActions({ productId, price, stock }: ProductActionsProps) {
+export default function ProductActions({ price, stock }: ProductActionsProps) {
   const dispatch = useDispatch()
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
