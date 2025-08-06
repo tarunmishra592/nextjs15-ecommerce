@@ -17,7 +17,6 @@ export default function OrderSummary() {
             key={item.product._id} 
             product={item.product} 
             quantity={item.quantity}
-            readOnly
           />
         ))}
       </div>
