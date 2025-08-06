@@ -15,7 +15,6 @@ export interface ProductListingProps {
 
 export default function ProductListing({ products, searchParams }: ProductListingProps) {
 
-  console.log('searchParams---', searchParams)
 
   const router = useRouter()
   const params = useSearchParams()

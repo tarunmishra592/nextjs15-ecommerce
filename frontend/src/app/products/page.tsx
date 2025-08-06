@@ -5,24 +5,25 @@ import { apiFetch } from '@/lib/api'
 import Filters from '@/components/Filters/Filters'
 import ProductListing from '@/components/ProductListing/ProductListing'
 
-interface SearchParamsObj {
-  [key: string]: string | string[] | undefined;
-}
 
 export default async function ProductListPage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParamsObj>;
+  searchParams: Promise<any>;
 }) {
   const sp = await searchParams;
 
   const params = new URLSearchParams();
-  Object.entries(sp).forEach(([key, value]) => {
-    if (value !== undefined) {
+  Object.entries(sp).forEach(([key, value]: any) => {
+    if (value !== undefined && value !== null) {
       if (Array.isArray(value)) {
-        value.forEach(v => params.append(key, v));
+        value.forEach(v => {
+          if (v != null) {
+            params.append(key, v)
+          }
+        })
       } else {
-        params.append(key, value);
+        params.append(key, value)
       }
     }
   });
