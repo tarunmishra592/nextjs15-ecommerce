@@ -14,6 +14,7 @@ export interface Product {
     category: string
     images: string[]
     stock: number
+    reviewCount: number;
     rating?: number
     tags?: string[]
     variants?: {

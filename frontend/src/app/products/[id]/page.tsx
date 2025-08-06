@@ -13,6 +13,8 @@ export default async function ProductPage({ params }: PageProps) {
   const { id } = await params;
 
   const product: Product & { reviews?: Review[] } = await apiFetch(`/products/${id}`);
+  const productReviews: Review[] = await apiFetch(`/products/${id}/reviews`);
+
 
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-8">
@@ -85,9 +87,9 @@ export default async function ProductPage({ params }: PageProps) {
       <section className="border-t pt-8">
         <h2 className="text-2xl font-semibold mb-6">Customer reviews</h2>
         
-        {product.reviews?.length ? (
+        {productReviews?.length ? (
           <div className="space-y-6">
-            {product.reviews.map((r) => (
+            {productReviews.map((r) => (
               <div key={r._id} className="border-b pb-6 last:border-b-0">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="font-semibold">{r.user?.name || 'Anonymous'}</div>
@@ -104,7 +106,6 @@ export default async function ProductPage({ params }: PageProps) {
                     ))}
                   </div>
                 </div>
-                {r.title && <h3 className="font-medium mb-1">{r.title}</h3>}
                 <p className="text-gray-700 mb-2">{r.comment}</p>
                 <div className="text-gray-500 text-sm">
                   Reviewed on {new Date(r.createdAt).toLocaleDateString('en-US', {

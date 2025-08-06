@@ -6,22 +6,11 @@ import { Product } from '@/types'
 
 export default async function HomePage() {
 
-  function isProductArray(value: unknown): value is Product[] {
-    return Array.isArray(value)
-      && value.every(item => typeof item.id === 'string' && typeof item.name === 'string');
-  }
-
-  async function fetchProducts(url: string) {
-    const data: unknown = await apiFetch<unknown>(url);
-    if (isProductArray(data)) return data;
-    throw new Error('Invalid product array');
-  }
-
-
+  
   const [featured, newArrivals] = await Promise.all([
-    fetchProducts('/products?tags=featured&limit=8'),
-    fetchProducts('/products?tags=new&limit=8'),
-  ]);
+    apiFetch('/products?tags=featured&limit=8'),
+    apiFetch('/products?tags=new&limit=8'),
+  ]) as [Product[], Product[]];
 
   return (
     <div className="space-y-16 pb-8"> {/* Added bottom padding */}

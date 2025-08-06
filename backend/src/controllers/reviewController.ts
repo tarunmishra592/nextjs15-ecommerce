@@ -4,7 +4,7 @@ import * as reviewService from '../services/reviewService';
 export const addReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { rating, comment } = req.body;
-    const review = await reviewService.addReview(req.user!.sub, req.params.productId, rating, comment);
+    const review = await reviewService.addReview(req.user!.sub, req.params.id, rating, comment);
     res.status(201).json(review);
   } catch (err) {
     next(err);
@@ -13,7 +13,7 @@ export const addReview = async (req: Request, res: Response, next: NextFunction)
 
 export const listReviews = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const reviews = await reviewService.listReviews(req.params.productId);
+    const reviews = await reviewService.listReviews(req.params.id);
     res.json(reviews);
   } catch (err) {
     next(err);
@@ -22,7 +22,7 @@ export const listReviews = async (req: Request, res: Response, next: NextFunctio
 
 export const deleteReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await reviewService.deleteReview(req.user!.sub, req.params.productId, req.params.id);
+    await reviewService.deleteReview(req.user!.sub, req.params.id, req.params.id);
     res.status(204).end();
   } catch (err) {
     next(err);
