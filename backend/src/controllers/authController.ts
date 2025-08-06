@@ -15,13 +15,19 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { email, password } = req.body;
     const data = await authService.login(email, password);
+
+    res.header('Access-Control-Allow-Origin', 'https://nextjs15-ecommerce-sooty.vercel.app');
+    res.header('Access-Control-Allow-Credentials', 'true');
+
     res.cookie('token', data.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // e.g., 7 days
+      secure: true, // Must be true for sameSite: 'none'
+      sameSite: 'none', // Required for cross-origin
+      domain: '.vercel.app', // Cover all subdomains
+      maxAge: 24 * 60 * 60 * 1000,
       path: '/',
     });
+
     res.status(200).json({ token: data.token, user: data.user});
   } catch (err) {
     next(err);
