@@ -27,7 +27,7 @@ export default function RegisterPage() {
     try {
       await apiFetch('/auth/signup', {
         method: 'POST',
-        body: JSON.stringify(data),
+        data: data,
         headers: {
           'Content-Type': 'application/json',
         },

@@ -18,7 +18,7 @@ export const login = (credentials: LoginCredentials) => {
       dispatch(startLoading());
       const data = await apiFetch<AuthTokens>('/auth/login', {
         method: 'POST',
-        body: JSON.stringify(credentials),
+        data: credentials,
       });
       dispatch(loginSuccess(data));
       return true;
@@ -60,7 +60,7 @@ export const register = (userData: any) => {
       dispatch(startLoading());
       const data = await apiFetch<AuthTokens>('/auth/register', {
         method: 'POST',
-        body: JSON.stringify(userData),
+        data: userData,
       });
       dispatch(loginSuccess(data));
       return true;

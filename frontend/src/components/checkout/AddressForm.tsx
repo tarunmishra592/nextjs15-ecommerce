@@ -96,7 +96,7 @@ export default function AddressForm() {
       if (user) {
         const response: any = await apiFetch('/users/addresses', {
           method: 'POST',
-          body: JSON.stringify(values)
+          data: values
         })
         savedAddress = response
         setAddresses(prev => [...prev, response])

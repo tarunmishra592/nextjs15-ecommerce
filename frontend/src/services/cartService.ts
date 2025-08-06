@@ -21,7 +21,7 @@ export const updateCartQuantity = (productId: string, quantity: number) => async
       dispatch(startLoading());
       const data = await apiFetch<CartItem[]>(`/cart/${productId}`, {
         method: 'PATCH',
-        body: JSON.stringify({ quantity }),
+        data: { quantity },
       });
       dispatch(updateCartQuantitySuccess(data));
     } catch (err: any) {
@@ -38,7 +38,7 @@ export const addCartItem = (productId: string, quantity: number = 1) => {
       dispatch(startLoading());
       const data = await apiFetch<CartItem>('/cart', {
         method: 'POST',
-        body: JSON.stringify({ productId, quantity }),
+        data: { productId, quantity },
       });
       
       // Dispatch success action with proper type

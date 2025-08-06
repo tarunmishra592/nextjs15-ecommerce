@@ -17,7 +17,7 @@ export const initiatePayment = (amount: number) =>
       dispatch(startLoading());
       const order = await apiFetch<RazorpayOrder>('/payment', {
         method: 'POST',
-        body: JSON.stringify({ amount })
+        data: { amount }
       });
       dispatch(paymentInitiated(order));
       return order;
@@ -35,7 +35,7 @@ export const verifyPayment = (payload: PaymentVerificationPayload) =>
       dispatch(startLoading());
       const result: any = await apiFetch('/payment/verify', {
         method: 'POST',
-        body: JSON.stringify(payload)
+        data: payload
       });
       dispatch(paymentVerified(result));
       return result;

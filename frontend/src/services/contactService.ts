@@ -12,7 +12,7 @@ export async function submitContactForm(formData: {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        data: formData,
       })
       return { success: true, message: 'Message sent successfully!' }
     } catch (error: any) {

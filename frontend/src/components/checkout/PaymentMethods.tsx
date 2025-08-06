@@ -49,7 +49,7 @@ export const PaymentMethods = () => {
         // 1. Create order directly in component
         const order = await apiFetch<RazorpayOrder>('/payment', {
           method: 'POST',
-          body: JSON.stringify({ amount: cartTotal * 100 })
+          data: { amount: cartTotal * 100 }
         });
         
         // 2. Save only the serializable order data to Redux
