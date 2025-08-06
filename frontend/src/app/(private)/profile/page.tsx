@@ -8,8 +8,10 @@ export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    apiFetch('/users/profile')
-      .then(setUser)
+    apiFetch<User>('/users/profile')
+      .then((data: User) => {
+        setUser(data);
+      })
       .catch(console.error);
   }, []);
 
