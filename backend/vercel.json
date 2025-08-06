@@ -8,8 +8,13 @@
     ],
     "routes": [
       {
+        "src": "/api/(.*)",
+        "dest": "backend/src/server.ts"
+      },
+      {
         "src": "/(.*)",
+        "status": 404,
         "dest": "backend/src/server.ts"
       }
     ]
-}
+  }
