@@ -13,16 +13,16 @@ export default async function ProductPage({ params }: Props) {
   const { id } = await params;
 
   const product: Product | null = null;
-  // let productReviews: Review[] = [];
+  const productReviews: Review[] = [];
   const error = null;
 
-  // try {
-  //   product = await apiFetch(`/products/${id}`);
-  //   // productReviews = await apiFetch(`/products/${id}/reviews`);
-  // } catch (err) {
-  //   error = err instanceof Error ? err.message : 'Unknown error';
-  //   console.error('API Error:', err);
-  // }
+  try {
+    let product = await apiFetch(`/products/${id}`);
+    let productReviews = await apiFetch(`/products/${id}/reviews`);
+  } catch (err) {
+    let error = err instanceof Error ? err.message : 'Unknown error';
+    console.error('API Error:', err);
+  }
 
   if (error) {
     return (
