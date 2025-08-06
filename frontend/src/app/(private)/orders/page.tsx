@@ -9,9 +9,15 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
-    apiFetch('/orders')
-      .then(setOrders)
-      .catch(console.error);
+    async function fetchOrders() {
+      try {
+        const data = await apiFetch<Order[]>('/orders');
+        setOrders(data);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchOrders();
   }, []);
 
   if (!orders.length) return <p className="p-4">No past orders found.</p>;
