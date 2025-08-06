@@ -1,3 +1,4 @@
+'use client'
 // src/app/(private)/order-confirmation/page.tsx
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';

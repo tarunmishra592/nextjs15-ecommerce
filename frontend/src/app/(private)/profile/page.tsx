@@ -1,3 +1,4 @@
+'use client'
 // src/app/(private)/profile/page.tsx
 import { useEffect, useState } from 'react';
 import type { User } from '@/types';
