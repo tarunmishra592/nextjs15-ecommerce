@@ -68,8 +68,7 @@ const apiClient = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest',
-    credentials: 'include'
+    'X-Requested-With': 'XMLHttpRequest'
   },
   timeout: 10000 // 10 seconds
 });

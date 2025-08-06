@@ -31,17 +31,6 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(morgan('dev'));
 
-app.options('/auth/login', (req, res) => {
-    res.set({
-      'Access-Control-Allow-Origin': 'https://nextjs15-ecommerce-sooty.vercel.app',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Credentials': 'true',
-      'Vary': 'Origin'
-    });
-    res.status(204).end();
-});
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
