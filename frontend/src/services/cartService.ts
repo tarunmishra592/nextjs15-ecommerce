@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api";
-import { addCartItemSuccess, fetchCartSuccess, operationFailed, removeCartItemSuccess, startLoading, updateCartQuantitySuccess } from "@/store/slices/cartSlice";
+import { fetchCartSuccess, operationFailed, removeCartItemSuccess, startLoading, updateCartQuantitySuccess } from "@/store/slices/cartSlice";
 import { AppDispatch } from "@/store/store";
 import { ApiErrorResponse, CartItem } from "@/types";
 

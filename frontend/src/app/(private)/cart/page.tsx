@@ -1,7 +1,7 @@
 // app/(private)/cart/page.tsx
 'use client'
 import CartItem from '@/components/CartItem/CartItem'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useRouter } from 'next/navigation'
 // import { RootState } from '@/store/store'
 import { FiShoppingCart } from 'react-icons/fi'
@@ -10,9 +10,10 @@ import { useEffect } from 'react'
 import { fetchCart } from '@/services/cartService'
 import { selectCartItems } from '@/store/slices/cartSlice'
 import { resetCheckout, setCheckoutStep } from '@/store/slices/checkoutSlice'
+import { useAppDispatch } from '@/store/store'
 
 export default function CartPage() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter()
   const items = useSelector(selectCartItems);
 
