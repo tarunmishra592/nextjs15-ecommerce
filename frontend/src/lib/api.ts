@@ -1,7 +1,16 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ApiErrorResponse } from "@/types";
 
-const API_BASE_URL = process.env.API_URL || 'http://localhost:4000/api';
+
+export const getApiBaseUrl = () => {
+  if (typeof window === 'undefined') {
+    // This simulates server behavior
+    return process.env.API_URL || 'http://localhost:4000/api';
+  } else {
+    // Browser/client
+    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  }
+};
 
 class ApiError extends Error {
   status: number;
@@ -27,7 +36,7 @@ class ApiError extends Error {
 
 // Create axios instance with base config
 const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getApiBaseUrl(),
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -87,7 +96,7 @@ export async function apiFetch<T = unknown>(
       throw error;
     }
     
-    const url = `${API_BASE_URL}${path}`;
+    const url = `${getApiBaseUrl()}${path}`;
     const errorMessage = error instanceof Error ? error.message : 'Unknown network error';
     throw new ApiError(errorMessage, 0, url);
   }
