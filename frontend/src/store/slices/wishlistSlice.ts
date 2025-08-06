@@ -36,7 +36,7 @@ export const wishlistSlice = createSlice({
       // Replace the entire wishlist with the new data
       state.items = action.payload;
     },
-    removeWishlistItemSuccess(state, action: PayloadAction<WishlistItems>) {
+    removeWishlistItemSuccess(state, action: PayloadAction<WishlistItems[]>) {
       state.loading = false;
       state.items = action.payload
     },
