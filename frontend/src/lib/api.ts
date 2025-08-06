@@ -3,13 +3,13 @@ import { ApiErrorResponse } from "@/types";
 
 
 export const getApiBaseUrl = () => {
-  if (typeof window === 'undefined') {
-    // This simulates server behavior
+  // For server-side rendering (including Vercel preview/deployment)
+  if (typeof window === 'undefined' || process.env.VERCEL_ENV === 'production') {
     return process.env.API_URL || 'http://localhost:4000/api';
-  } else {
-    // Browser/client
-    return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
   }
+  
+  // Browser/client
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 };
 
 class ApiError extends Error {

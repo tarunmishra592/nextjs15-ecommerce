@@ -1,6 +1,6 @@
 import ProductActions from '@/components/ProductActions/ProductActions';
 import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGallery';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, getApiBaseUrl } from '@/lib/api';
 import { Product, Review } from '@/types';
 
 type Props = {
@@ -17,7 +17,9 @@ export default async function ProductPage({ params }: Props) {
   let error = null;
 
   try {
-    product = await apiFetch(`/products/${id}`);
+    product = await fetch(`${getApiBaseUrl()}/products/${id}`, {
+      next: { revalidate: 60 } // Cache for 60 seconds
+    });;
     // productReviews = await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
     console.log(err)
