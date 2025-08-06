@@ -45,12 +45,8 @@ export default function NotFound() {
 
           {/* Interactive buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild className="bg-green-600 hover:bg-green-700">
-              <Link href="/">Return Home</Link>
-            </Button>
-            <Button variant="outline" className="text-green-600 border-green-600 hover:bg-green-50">
-              <Link href="/contact">Report Issue</Link>
-            </Button>
+            <Link className="bg-green-600 p-2 rounded-4xl text-white hover:bg-green-700" href="/">Return Home</Link>
+            <Link className="text-white p-2 bg-red-500 rounded-4xl border-green-600 hover:bg-red-400" href="/contact">Report Issue</Link>
           </div>
         </div>
       </div>
