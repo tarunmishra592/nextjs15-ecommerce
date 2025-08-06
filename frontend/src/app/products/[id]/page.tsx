@@ -12,8 +12,37 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  const product: Product = await apiFetch(`/products/${id}`);
-  const productReviews: Review[] = await apiFetch(`/products/${id}/reviews`);
+  let product: Product | null = null;
+  let productReviews: Review[] = [];
+  let error = null;
+
+  try {
+    product = await apiFetch(`/products/${id}`);
+    productReviews = await apiFetch(`/products/${id}/reviews`);
+  } catch (err) {
+    error = err instanceof Error ? err.message : 'Unknown error';
+    console.error('API Error:', err);
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-6xl mx-auto p-4">
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded">
+          Failed to load product data: {error}
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="max-w-6xl mx-auto p-4">
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-700 p-4 rounded">
+          Product not found
+        </div>
+      </div>
+    );
+  }
 
 
   return (
