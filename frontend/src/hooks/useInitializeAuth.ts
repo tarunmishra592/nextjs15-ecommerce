@@ -1,7 +1,8 @@
 // hooks/useInitializeAuth.ts
 import { useEffect } from 'react';
 import { useAppDispatch } from '@/store/hooks';
-import { initializeAuth, fetchUser } from '@/store/slices/authSlice';
+import { initializeAuth } from '@/store/slices/authSlice';
+import { fetchUser } from '@/services/authService';
 
 export const useInitializeAuth = () => {
   const dispatch = useAppDispatch();

@@ -6,7 +6,7 @@ const initialState: AuthState = {
   user: null, 
   token: null, 
   loading: false, 
-  error: null 
+  error: '' 
 };
 
 export const authSlice = createSlice({
@@ -18,7 +18,7 @@ export const authSlice = createSlice({
       state.token = null;
       state.user = null;
       state.loading = false;
-      state.error = null;
+      state.error = '';
       localStorage.removeItem('token');
     },
     initializeAuth(state) {
@@ -34,9 +34,9 @@ export const authSlice = createSlice({
     // Loading/error states
     startLoading(state) {
       state.loading = true;
-      state.error = null;
+      state.error = '';
     },
-    authFailed(state, action: PayloadAction<string>) {
+    authFailed(state, action: PayloadAction<{message: string, status: number}>) {
       state.loading = false;
       state.error = action.payload;
     },
@@ -46,13 +46,13 @@ export const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload.user;
       state.token = action.payload.token;
-      state.error = null;
+      state.error = '';
       localStorage.setItem('token', action.payload.token);
     },
     fetchUserSuccess(state, action: PayloadAction<any>) {
       state.loading = false;
       state.user = action.payload;
-      state.error = null;
+      state.error = '';
     }
   },
 });

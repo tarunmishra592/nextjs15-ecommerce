@@ -65,7 +65,7 @@ export interface AuthState {
     user: any;
     token: string | null;
     loading: boolean;
-    error: string | null;
+    error: string | {message: string, status: number};
 }
 
 export interface LoginCredentials {
