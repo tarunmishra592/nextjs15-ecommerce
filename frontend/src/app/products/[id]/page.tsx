@@ -5,13 +5,13 @@ import { apiFetch } from '@/lib/api';
 import { Product, Review } from '@/types';
 
 type Props = {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 
 export default async function ProductPage({ params }: Props) {
 
-  const { id } = params;
+  const { id } = await params;
 
   const product: Product & { reviews?: Review[] } = await apiFetch(`/products/${id}`);
   const productReviews: Review[] = await apiFetch(`/products/${id}/reviews`);
