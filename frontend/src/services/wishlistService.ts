@@ -41,7 +41,7 @@ export const removeWishlistItem = (productId: string) => async (dispatch: AppDis
     try {
       dispatch(startLoading());
       
-      const updatedWishlist = await apiFetch<WishlistItems>(`/wishlist/${productId}`, { method: 'DELETE' });
+      const updatedWishlist = await apiFetch<WishlistItems[]>(`/wishlist/${productId}`, { method: 'DELETE' });
       
       dispatch(removeWishlistItemSuccess(updatedWishlist));
       
