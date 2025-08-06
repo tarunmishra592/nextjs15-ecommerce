@@ -1,29 +1,34 @@
+// src/lib/api.ts
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { ApiErrorResponse } from "@/types";
 
+// ========================
+// Type Definitions
+// ========================
+export interface ApiErrorResponse {
+  message?: string;
+  error?: string;
+  statusCode?: number;
+  [key: string]: any; // Allow additional properties
+}
 
-export const getApiBaseUrl = () => {
-  // For server-side rendering (including Vercel preview/deployment)
-  if (typeof window === 'undefined' || process.env.VERCEL_ENV === 'production') {
-    return process.env.API_URL || 'https://nextjs15-ecommerce-rvcc.vercel.app/api';
-  }
-  
-  // Browser/client
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-};
-
-class ApiError extends Error {
+export class ApiError extends Error {
   status: number;
   data: ApiErrorResponse;
   url: string;
 
-  constructor(message: string, status: number, url: string, data: ApiErrorResponse = {}) {
+  constructor(
+    message: string,
+    status: number,
+    url: string,
+    data: ApiErrorResponse = {}
+  ) {
     super(message);
+    this.name = 'ApiError';
     this.status = status;
     this.url = url;
     this.data = data;
-    this.name = 'ApiError';
-    
+
+    // Maintain proper stack trace
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ApiError);
     }
@@ -32,7 +37,30 @@ class ApiError extends Error {
   toString() {
     return `${this.name}: ${this.message} (Status: ${this.status}, URL: ${this.url})`;
   }
+
+  toJSON() {
+    return {
+      error: this.name,
+      message: this.message,
+      status: this.status,
+      url: this.url,
+      ...this.data
+    };
+  }
 }
+
+// ========================
+// API Configuration
+// ========================
+export const getApiBaseUrl = (): string => {
+  // For production environment
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.NEXT_PUBLIC_API_URL || 'https://nextjs15-ecommerce-rvcc.vercel.app/api';
+  }
+  
+  // For local development
+  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+};
 
 // Create axios instance with base config
 const apiClient = axios.create({
@@ -40,50 +68,77 @@ const apiClient = axios.create({
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-  }
+    'X-Requested-With': 'XMLHttpRequest'
+  },
+  timeout: 10000 // 10 seconds
 });
 
-// Request interceptor for adding auth token
-apiClient.interceptors.request.use((config: any) => {
+// ========================
+// Request Interceptor
+// ========================
+apiClient.interceptors.request.use((config: AxiosRequestConfig) => {
+  // Only attempt to get token on client-side
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
     }
   }
   return config;
 });
 
-// Response interceptor for handling errors
+// ========================
+// Response Interceptor
+// ========================
 apiClient.interceptors.response.use(
-  (response: any) => response,
+  (response: AxiosResponse) => {
+    // Store token if present in response
+    if (response.data?.token) {
+      localStorage.setItem('token', response.data.token);
+    }
+    return response;
+  },
   (error: any) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      window.location.href = '/';
-      window.location.reload();
-      throw new ApiError('Session expired. Redirecting...', 401, error.config.url || '');
+    // Handle network errors
+    if (error.code === 'ECONNABORTED') {
+      throw new ApiError('Request timeout', 408, error.config.url);
     }
     
-    const url = error.config?.url || '';
-    const status = error.response?.status || 0;
-    const responseData = error.response?.data || {};
-    
-    const errorMessage = typeof responseData === 'object' && responseData !== null
-      ? (responseData as ApiErrorResponse).message || 
-        (responseData as ApiErrorResponse).error || 
-        `Request failed with status ${status}`
-      : `Request failed with status ${status}`;
-    
+    if (!error.response) {
+      throw new ApiError('Network Error', 0, error.config.url);
+    }
+
+    const { status, config, data } = error.response;
+    const url = config?.url || '';
+    const errorData = data || {};
+
+    // Handle 401 Unauthorized
+    if (status === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+      }
+      throw new ApiError(
+        errorData.message || 'Session expired',
+        status,
+        url,
+        errorData
+      );
+    }
+
+    // Handle other errors
     throw new ApiError(
-      errorMessage,
+      errorData.message || error.message || 'Request failed',
       status,
       url,
-      typeof responseData === 'object' ? (responseData as ApiErrorResponse) : {}
+      errorData
     );
   }
 );
 
+// ========================
+// Main API Fetch Function
+// ========================
 export async function apiFetch<T = unknown>(
   path: string,
   options?: AxiosRequestConfig
@@ -97,7 +152,7 @@ export async function apiFetch<T = unknown>(
     }
     
     const url = `${getApiBaseUrl()}${path}`;
-    const errorMessage = error instanceof Error ? error.message : 'Unknown network error';
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
     throw new ApiError(errorMessage, 0, url);
   }
 }
