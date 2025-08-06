@@ -5,7 +5,7 @@ import { ApiErrorResponse } from "@/types";
 export const getApiBaseUrl = () => {
   // For server-side rendering (including Vercel preview/deployment)
   if (typeof window === 'undefined' || process.env.VERCEL_ENV === 'production') {
-    return process.env.API_URL || 'http://localhost:4000/api';
+    return process.env.API_URL || 'https://nextjs15-ecommerce-rvcc.vercel.app/api';
   }
   
   // Browser/client

@@ -10,8 +10,8 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  const product: any = await fetch(`http://localhost:4000/api/products/${id}`);
-  const productReviews: any = await fetch(`http://localhost:4000/api/products/${id}/reviews`);
+  const product: any = await fetch(`https://nextjs15-ecommerce-rvcc.vercel.app/api/products/${id}`);
+  const productReviews: any = await fetch(`https://nextjs15-ecommerce-rvcc.vercel.app/api/products/${id}/reviews`);
 
 
   return (
