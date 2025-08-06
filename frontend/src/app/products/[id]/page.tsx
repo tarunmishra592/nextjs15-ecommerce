@@ -12,16 +12,16 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  const product: Product | null = null;
-  const productReviews: Review[] = [];
-  const error = null;
+  let product: Product | null = null;
+  // let productReviews: Review[] = [];
+  let error = null;
 
   try {
-    await apiFetch(`/products/${id}`);
-    await apiFetch(`/products/${id}/reviews`);
+    product = await apiFetch(`/products/${id}`);
+    // productReviews = await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
-    const error = err instanceof Error ? err.message : 'Unknown error';
-    console.error('API Error:', error);
+    error = err instanceof Error ? err.message : 'Unknown error';
+    console.error('API Error:', err);
   }
 
   if (error) {
@@ -55,7 +55,7 @@ export default async function ProductPage({ params }: Props) {
       <section className="border-t pt-8">
         <h2 className="text-2xl font-semibold mb-6">Customer reviews</h2>
         
-       Review
+       
       </section>
     </div>
   );
