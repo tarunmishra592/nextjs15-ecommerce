@@ -21,7 +21,6 @@ export default async function ProductPage({ params }: Props) {
     // productReviews = await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
     error = err instanceof Error ? err.message : 'Unknown error';
-    console.error('API Error:', err);
   }
 
   if (error) {
