@@ -12,17 +12,17 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  let product: Product | null = null;
+  const product: Product | null = null;
   // let productReviews: Review[] = [];
-  let error = null;
+  const error = null;
 
-  try {
-    product = await apiFetch(`/products/${id}`);
-    // productReviews = await apiFetch(`/products/${id}/reviews`);
-  } catch (err) {
-    error = err instanceof Error ? err.message : 'Unknown error';
-    console.error('API Error:', err);
-  }
+  // try {
+  //   product = await apiFetch(`/products/${id}`);
+  //   // productReviews = await apiFetch(`/products/${id}/reviews`);
+  // } catch (err) {
+  //   error = err instanceof Error ? err.message : 'Unknown error';
+  //   console.error('API Error:', err);
+  // }
 
   if (error) {
     return (
