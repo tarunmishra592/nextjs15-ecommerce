@@ -15,7 +15,21 @@ import contactRoutes from './routes/contactRoutes';
 const app = express();
 
 // Middlewares
-app.use(cors({ origin: true, credentials: true }));
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://your-frontend.vercel.app',
+  ];
+  
+app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+}));
 app.use(cookieParser());
 app.use(express.json());
 app.use(morgan('dev'));

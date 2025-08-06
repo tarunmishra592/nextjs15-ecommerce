@@ -20,6 +20,7 @@ export default async function ProductPage({ params }: Props) {
     product = await apiFetch(`/products/${id}`);
     // productReviews = await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
+    console.log(err)
     error = err instanceof Error ? err.message : 'Unknown error';
   }
 
