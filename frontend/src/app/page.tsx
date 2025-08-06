@@ -1,4 +1,8 @@
 // app/page.tsx
+
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
+
 import HeroSlider from '@/components/HeroSlider/HeroSlider'
 import ProductCarousel from '@/components/ProductCarousel/ProductCarousel'
 import { apiFetch } from '@/lib/api'
