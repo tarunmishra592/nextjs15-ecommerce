@@ -18,6 +18,7 @@ export const login = (credentials: LoginCredentials) => {
       dispatch(startLoading());
       const data = await apiFetch<AuthTokens>('/auth/login', {
         method: 'POST',
+        credentials: 'include',
         data: credentials,
       });
       dispatch(loginSuccess(data));
