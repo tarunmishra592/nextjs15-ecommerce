@@ -5,12 +5,18 @@ import ProductCard from '@/components/ProductCard/ProductCard'
 import { FiChevronDown } from 'react-icons/fi'
 import { useSearchParams, useRouter } from 'next/navigation'
 
-interface ProductListingProps {
-  products: Product[]
-  searchParams: Record<string, string>
+
+type QueryParams = Record<string, string>;
+
+export interface ProductListingProps {
+  products: Product[];
+  searchParams: QueryParams;
 }
 
 export default function ProductListing({ products, searchParams }: ProductListingProps) {
+
+  console.log('searchParams---', searchParams)
+
   const router = useRouter()
   const params = useSearchParams()
 

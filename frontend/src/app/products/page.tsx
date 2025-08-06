@@ -5,26 +5,28 @@ import { apiFetch } from '@/lib/api'
 import Filters from '@/components/Filters/Filters'
 import ProductListing from '@/components/ProductListing/ProductListing'
 
-interface SearchParams {
-  [key: string]: string | string[] | undefined
+interface SearchParamsObj {
+  [key: string]: string | string[] | undefined;
 }
 
 export default async function ProductListPage({
   searchParams,
 }: {
-  searchParams: SearchParams
+  searchParams: Promise<SearchParamsObj>;
 }) {
-  // Convert searchParams to URLSearchParams
-  const params = new URLSearchParams()
-  Object.entries(searchParams).forEach(([key, value]) => {
-    if (value) {
+  const sp = await searchParams;
+
+  const params = new URLSearchParams();
+  Object.entries(sp).forEach(([key, value]) => {
+    if (value !== undefined) {
       if (Array.isArray(value)) {
-        value.forEach(v => params.append(key, v))
+        value.forEach(v => params.append(key, v));
       } else {
-        params.append(key, value)
+        params.append(key, value);
       }
     }
-  })
+  });
+
 
   // Fetch products with filters
   const products: Product[] = await apiFetch(`/products?${params.toString()}`)
@@ -52,7 +54,7 @@ export default async function ProductListPage({
           colors={colors}
           sizes={sizes}
         />
-        <ProductListing products={products} searchParams={searchParams} />
+        <ProductListing products={products} searchParams={sp} />
       </div>
     </div>
   )
