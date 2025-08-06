@@ -6,16 +6,16 @@ import Image from 'next/image'
 import { FiShoppingCart } from 'react-icons/fi'
 import { IoMdHeartEmpty } from 'react-icons/io'
 import { BsCheckCircleFill } from 'react-icons/bs'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { toast } from 'react-hot-toast'
 import useAuth from '@/hooks/useAuth'
-import { RootState } from '@/store/store'
+import { RootState, useAppDispatch } from '@/store/store'
 import { addCartItem } from '@/services/cartService'
 import { addWishlistItem, removeWishlistItem } from '@/services/wishlistService'
 
 export default function ProductCard({ product, from=null }: { product: any, from?: string | null }) {
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { isAuthenticated } = useAuth()
 
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items); 
@@ -34,7 +34,7 @@ export default function ProductCard({ product, from=null }: { product: any, from
     
       try {
         // Dispatch the action and wait for it to complete
-        const result = dispatch(addCartItem(product._id, 1));
+        const result = await dispatch(addCartItem(product._id, 1));
 
         if (result) {
           toast.success('Added to cart!');

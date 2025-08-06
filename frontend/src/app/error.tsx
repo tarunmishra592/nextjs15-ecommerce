@@ -3,6 +3,8 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
 import { Button } from '@/components/ui/button' // Assuming you're using shadcn/ui
 
 interface ErrorProps {
@@ -11,6 +13,9 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
+
+  const router = useRouter()
+
   useEffect(() => {
     console.error('Error boundary caught:', error)
   }, [error])
@@ -59,8 +64,8 @@ export default function Error({ error, reset }: ErrorProps) {
             >
               Try Again
             </Button>
-            <Button asChild variant="outline" className="border-green-600 text-green-600">
-              <Link href="/">Go Home</Link>
+            <Button onClick={() => router.push('/')} variant="outline" className="border-green-600 text-green-600">
+              Go Home
             </Button>
           </div>
         </div>
