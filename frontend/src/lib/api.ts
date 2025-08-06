@@ -90,11 +90,6 @@ export async function apiFetch<T = unknown>(
     return data as T;
   } catch (error) {
     if (error instanceof ApiError) {
-      console.error(`API Error: ${error.toString()}`, {
-        status: error.status,
-        url: error.url,
-        data: error.data
-      });
       throw error;
     }
     
