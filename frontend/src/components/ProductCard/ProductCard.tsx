@@ -137,7 +137,7 @@ export default function ProductCard({ product, from=null }: { product: any, from
           {product.variants?.colors && (
             <div className="min-h-[1.25rem] mt-2">
                 <div className="flex gap-1">
-                  {product.variants.colors.slice(0, 3).map((color) => (
+                  {product.variants.colors.slice(0, 3).map((color: any) => (
                     <span 
                       key={color} 
                       className="w-4 h-4 rounded-full border border-gray-200"
