@@ -1,18 +1,24 @@
 {
-    "compilerOptions": {
-      "target": "ES2021",
-      "module": "CommonJS",
-      "moduleResolution": "node",
-      "outDir": "dist",
-      "rootDir": "src",
-      "strict": true,
-      "esModuleInterop": true,
-      "skipLibCheck": true,
-      "forceConsistentCasingInFileNames": true,
-      "resolveJsonModule": true,
-      "sourceMap": true
-    },
-    "include": ["src"],
-    "exclude": ["node_modules", "dist"]
-  }
-  
+  "compilerOptions": {
+    "target": "ES2021",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "types": ["node"],
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": ["src/config/*"],
+      "@routes/*": ["src/routes/*"],
+      "@models/*": ["src/models/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+}

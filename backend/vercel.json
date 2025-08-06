@@ -1,20 +1,24 @@
 {
-    "version": 2,
-    "builds": [
-      {
-        "src": "./src/server.ts",
-        "use": "@vercel/node"
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/server.ts",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "dist/**",
+          "src/config/*",
+          "src/schemas/*",
+          "src/utils/*"
+        ]
       }
-    ],
-    "routes": [
-      {
-        "src": "/api/(.*)",
-        "dest": "./src/server.ts"
-      },
-      {
-        "src": "/(.*)",
-        "status": 404,
-        "dest": "./src/server.ts"
-      }
-    ]
-  }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "src/server.ts",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH"]
+    }
+  ]
+}
