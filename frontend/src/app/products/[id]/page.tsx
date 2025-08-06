@@ -1,7 +1,5 @@
 import ProductActions from '@/components/ProductActions/ProductActions';
 import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGallery';
-import { apiFetch, getApiBaseUrl } from '@/lib/api';
-import { Product, Review } from '@/types';
 
 type Props = {
   params: Promise<{ id: string }>
@@ -12,8 +10,8 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  const product: any = await fetch(`${getApiBaseUrl()}/products/${id}`);
-  const productReviews: any = await fetch(`${getApiBaseUrl()}/products/${id}/reviews`);
+  const product: any = await fetch(`http://localhost:4000/api/products/${id}`);
+  const productReviews: any = await fetch(`http://localhost:4000/api/products/${id}/reviews`);
 
 
   return (
