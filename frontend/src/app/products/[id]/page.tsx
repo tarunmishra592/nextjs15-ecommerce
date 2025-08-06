@@ -4,11 +4,9 @@ import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGa
 import { apiFetch } from '@/lib/api';
 import { Product, Review } from '@/types';
 
-interface PageProps {
-  params: { id: string };
-}
 
-export default async function ProductPage({ params }: PageProps) {
+
+export default async function ProductPage({ params }: { params: { id: string } }) {
 
   const { id } = params;
 
