@@ -35,7 +35,7 @@ export async function apiFetch<T = unknown>(
   const url = `${API_BASE_URL}${path}`;
   
   try {
-    const headers = {
+    const headers:any = {
       'Content-Type': 'application/json',
       ...options?.headers,
     };
