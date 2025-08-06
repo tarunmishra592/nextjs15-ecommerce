@@ -4,9 +4,12 @@ import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGa
 import { apiFetch } from '@/lib/api';
 import { Product, Review } from '@/types';
 
+type Props = {
+  params: { id: string }
+}
 
 
-export default async function ProductPage({ params }: { params: { id: string } }) {
+export default async function ProductPage({ params }: Props) {
 
   const { id } = params;
 
