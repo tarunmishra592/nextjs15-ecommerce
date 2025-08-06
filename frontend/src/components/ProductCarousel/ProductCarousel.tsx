@@ -1,22 +1,36 @@
 // components/ProductCarousel/ProductCarousel.tsx
 'use client'
 
-import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react'
+import { Swiper, SwiperSlide } from 'swiper/react'
 import { Navigation } from 'swiper/modules'
 import ProductCard from '../ProductCard/ProductCard'
 import { Product } from '@/types'
 import 'swiper/css'
 import 'swiper/css/navigation'
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { apiFetch } from '@/lib/api'
 
 interface ProductCarouselProps {
   title: string
-  products: Product[]
+  tag: string
 }
 
-export default function ProductCarousel({ title, products }: ProductCarouselProps) {
+export default function ProductCarousel({ title, tag }: ProductCarouselProps) {
   const swiperRef = useRef<any>(null)
+  const [products, setProducts] = useState<Product[]>([])
+
+
+  useEffect(() => {
+    async function getProducts(){
+      apiFetch<Product[]>(`/products?tags=${tag}&limit=8`)
+        .then((data: Product[]) => {
+          setProducts(data);
+        })
+        .catch(console.error);
+    }
+    getProducts()
+  }, [tag])
 
   return (
     <section className="max-w-6xl mx-auto p-4">
@@ -56,7 +70,7 @@ export default function ProductCarousel({ title, products }: ProductCarouselProp
           1024: { slidesPerView: 4 }
         }}
       >
-        {products.map((product) => (
+        {products.length > 0 && products.map((product) => (
           <SwiperSlide key={product._id}>
             <ProductCard product={product} />
           </SwiperSlide>
