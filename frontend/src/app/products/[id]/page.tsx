@@ -11,8 +11,10 @@ type Props = {
 
 
 export default async function ProductPage({ params }: Props) {
+  console.log('id 1', params)
 
   try {
+    console.log('id 2', params)
     const { id } = await params;
 
     const product: Product = await apiFetch(`/products/${id}`);
