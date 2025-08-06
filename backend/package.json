@@ -5,8 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
-    "build": "tsc",
+    "build": "tsc && cp -r src/schemas dist/schemas && cp -r src/config dist/config",
     "start": "node dist/server.js",
+    "vercel-build": "npm run build && mv dist server",
     "seed": "ts-node -r dotenv/config src/seed/products.seed.ts",
     "lint": "eslint . --ext .ts",
     "test": "jest"
