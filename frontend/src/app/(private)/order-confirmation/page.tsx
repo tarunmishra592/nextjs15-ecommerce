@@ -12,8 +12,10 @@ export default function ConfirmationPage() {
 
   useEffect(() => {
     if (orderId) {
-      apiFetch(`/orders/${orderId}`)
-        .then(setOrder)
+      apiFetch<Order>(`/orders/${orderId}`)
+        .then((data: Order) => {
+          setOrder(data);
+        })
         .catch(console.error);
     }
   }, [orderId]);
