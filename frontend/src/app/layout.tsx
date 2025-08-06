@@ -7,7 +7,7 @@ import AuthInitializer from '@/components/AuthInitializer/AuthInitializer';
 
 import './globals.css'
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children }:{children: React.ReactNode}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="flex flex-col min-h-screen" suppressHydrationWarning>
