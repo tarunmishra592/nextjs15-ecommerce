@@ -5,11 +5,14 @@ import { apiFetch } from '@/lib/api';
 import { Product, Review } from '@/types';
 
 interface PageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const product: Product & { reviews?: Review[] } = await apiFetch(`/products/${params.id}`);
+
+  const { id } = await params;
+
+  const product: Product & { reviews?: Review[] } = await apiFetch(`/products/${id}`);
 
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-8">

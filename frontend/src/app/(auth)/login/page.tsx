@@ -54,6 +54,7 @@ export default function LoginPage() {
         setErrors({ password: res.error.message ?? 'Login failed' })
       }
     } catch (error) {
+      console.log(error)
       setErrors({ password: 'An unexpected error occurred' })
     } finally {
       setIsLoading(false)
