@@ -17,7 +17,7 @@ export default async function ProductPage({ params }: Props) {
   let error = null;
 
   try {
-    product = await fetch(`/products/${id}`);
+    product = await apiFetch(`/products/${id}`);
     // productReviews = await apiFetch(`/products/${id}/reviews`);
   } catch (err) {
     console.log(err)
