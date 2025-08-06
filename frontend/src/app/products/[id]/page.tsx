@@ -1,6 +1,6 @@
 import ProductActions from '@/components/ProductActions/ProductActions';
 import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGallery';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, getApiBaseUrl } from '@/lib/api';
 import { Product, Review } from '@/types';
 
 type Props = {
@@ -12,8 +12,8 @@ export default async function ProductPage({ params }: Props) {
 
   const { id } = await params;
 
-  const product: Product = await apiFetch(`/products/${id}`);
-  const productReviews: Review[] = await apiFetch(`/products/${id}/reviews`);
+  const product: any = await fetch(`${getApiBaseUrl()}/products/${id}`);
+  const productReviews: any = await fetch(`${getApiBaseUrl()}/products/${id}/reviews`);
 
 
   return (
@@ -89,7 +89,7 @@ export default async function ProductPage({ params }: Props) {
         
         {productReviews?.length ? (
           <div className="space-y-6">
-            {productReviews.map((r) => (
+            {productReviews.map((r: any) => (
               <div key={r._id} className="border-b pb-6 last:border-b-0">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="font-semibold">{r.user?.name || 'Anonymous'}</div>
