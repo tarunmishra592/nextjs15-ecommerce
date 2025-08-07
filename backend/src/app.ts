@@ -43,9 +43,11 @@ app.use(cors({
   ],
   exposedHeaders: ['Set-Cookie'] // Expose Set-Cookie header to frontend
 }));
+
   
 // Handle OPTIONS requests
 app.options('*', cors());
+
 
 app.use(cookieParser());
 app.use(express.json());

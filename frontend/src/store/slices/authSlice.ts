@@ -47,7 +47,6 @@ export const authSlice = createSlice({
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = '';
-      localStorage.setItem('token', action.payload.token);
     },
     fetchUserSuccess(state, action: PayloadAction<any>) {
       state.loading = false;

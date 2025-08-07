@@ -18,17 +18,13 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     // Get the requesting origin dynamically
     const requestOrigin = req.get('origin') || '';
     const isProduction = process.env.NODE_ENV === 'production';
-    
+    res.setHeader('x-vercel-set-bypass-cookie', 'samesitenone');
     res.cookie('token', data.token, {
       httpOnly: true,
-      secure: true,
-      sameSite: 'none',
+      secure: true,        // Must be false for HTTP
+      sameSite: 'none',      // Use 'lax' for local testing
       path: '/',
-      // Use the specific domain instead of .vercel.app
-      domain: isProduction 
-        ? new URL(requestOrigin).hostname // e.g. "nextjs15-ecommerce-sooty.vercel.app"
-        : 'localhost',
-      maxAge: 30 * 24 * 60 * 60 * 1000
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({ token: data.token, user: data.user});
   } catch (err) {

@@ -46,6 +46,7 @@ export default function LoginPage() {
 
     try {
       const success = await dispatch(login(form))
+      console.log('success', success)
       if (success) {
         dispatch(fetchCart())
         dispatch(fetchWishlist())

@@ -11,6 +11,7 @@ import type {
   LoginCredentials, 
   User 
 } from '@/types';
+import { setAuthCookie } from '@/lib/token';
 
 export const login = (credentials: LoginCredentials) => {
   return async (dispatch: AppDispatch) => {
@@ -21,6 +22,7 @@ export const login = (credentials: LoginCredentials) => {
         credentials: 'include',
         data: credentials,
       });
+      await setAuthCookie(data.token);
       dispatch(loginSuccess(data));
       return true;
     } catch (err: any) {
