@@ -29,14 +29,14 @@ export async function createOrder(
       return {
         product: product._id,
         quantity: item.quantity,
-        priceAtOrder: product.price,
+        priceAt: product.price,
         name: product.name // Store product name at time of order
       };
     });
 
     // 3. Calculate totals
     const subtotal = orderItems.reduce(
-      (sum, item) => sum + (item.priceAtOrder * item.quantity),
+      (sum, item) => sum + (item.priceAt * item.quantity),
       0
     );
     const total = subtotal; // Add shipping, taxes etc. if needed
@@ -47,7 +47,7 @@ export async function createOrder(
       items: orderItems,
       shippingAddress: shippingAddressId,
       paymentMethod,
-      status: 'pending_payment',
+      status: 'pending',
       subtotal,
       total,
       paid: false
