@@ -76,7 +76,7 @@ const apiClient = axios.create({
 // ========================
 // Request Interceptor
 // ========================
-apiClient.interceptors.request.use((config: AxiosRequestConfig) => {
+apiClient.interceptors.request.use((config: any) => {
   // Only attempt to get token on client-side
   if (typeof window !== 'undefined') {
     const token = localStorage.getItem('token');
