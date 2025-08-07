@@ -164,6 +164,7 @@ export interface PaymentVerificationResult {
 }
 
 export interface ShippingAddress {
+    id: string;
     firstName: string;
     lastName: string;
     address: string;

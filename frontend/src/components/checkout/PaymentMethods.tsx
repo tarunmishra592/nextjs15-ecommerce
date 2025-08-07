@@ -55,7 +55,7 @@ export const PaymentMethods = () => {
             productId: item.product._id,
             quantity: item.quantity
           })),
-          shippingAddressId: '12444', // You'll need to get this from state
+          shippingAddressId: shippingAddress?.id, // You'll need to get this from state
           paymentMethod: 'razorpay',
           amount: cartTotal
         };

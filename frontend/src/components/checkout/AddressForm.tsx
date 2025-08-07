@@ -75,6 +75,7 @@ export default function AddressForm() {
     const address = addresses.find(addr => addr._id === selectedAddressId)
     if (address) {
       dispatch(setShippingAddress({
+        id: address._id,
         firstName: address.firstName,
         lastName: address.lastName,
         address: address.address,
@@ -105,6 +106,7 @@ export default function AddressForm() {
       }
 
       dispatch(setShippingAddress({
+        id: savedAddress._id,
         firstName: savedAddress.firstName,
         lastName: savedAddress.lastName,
         address: savedAddress.address,
