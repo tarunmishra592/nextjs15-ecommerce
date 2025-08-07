@@ -3,15 +3,7 @@
   "builds": [
     {
       "src": "src/server.ts",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "dist/**",
-          "src/config/*",
-          "src/schemas/*",
-          "src/utils/*"
-        ]
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -23,7 +15,8 @@
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Origin": "https://nextjs15-ecommerce-sooty.vercel.app",
         "Access-Control-Allow-Methods": "GET,OPTIONS,PATCH,DELETE,POST,PUT",
-        "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+        "Access-Control-Allow-Headers": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization",
+        "Vary": "Origin"
       }
     }
   ]

@@ -17,10 +17,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     const data = await authService.login(email, password);
     res.cookie('token', data.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000, // e.g., 7 days
+      secure: true, // Always true in Vercel
+      sameSite: 'none', // For cross-origin
+      maxAge: 24 * 60 * 60 * 1000,
       path: '/',
+      domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
     });
     res.status(200).json({ token: data.token, user: data.user});
   } catch (err) {
