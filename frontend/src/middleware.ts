@@ -26,36 +26,32 @@ export function middleware(req: NextRequest) {
   const isAuthPath = authPaths.some(path => pathname.startsWith(path));
   const token = req.cookies.get('token')?.value;
 
-  const headers = Object.fromEntries(req.headers.entries());
-  console.log('Request headers:', headers);
-  
-  // 2. Alternative cookie access methods
-  const cookieHeader = req.headers.get('cookie');
-  console.log('Raw cookie header:', cookieHeader);
-  
-  // 3. Manual cookie parsing
-  const manualToken = cookieHeader?.split(';')
-    .find(c => c.trim().startsWith('token='))
-    ?.split('=')[1];
-  console.log('Manually parsed token:', manualToken);
+  console.log('All cookies:', req.cookies.getAll());
+  console.log('Cookie header:', req.headers.get('authorization'));
+
+  console.log('token', token)
 
   // Handle protected paths
+
   if (isProtected && !token) {
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('next', pathname);
-    return NextResponse.redirect(loginUrl);
+    const response = NextResponse.redirect(loginUrl);
+    response.headers.set('x-middleware-cache', 'no-cache');
+    return response;
   }
 
   // Handle auth paths when already logged in
   if (isAuthPath && token) {
-    // const homeUrl = new URL('/', req.url);
-    // You might want to redirect to the original intended page
-    // if it was stored somewhere (like in a 'next' query param)
     const redirectTo = req.nextUrl.searchParams.get('next') || '/';
-    return NextResponse.redirect(new URL(redirectTo, req.url));
+    const response = NextResponse.redirect(new URL(redirectTo, req.url));
+    response.headers.set('x-middleware-cache', 'no-cache');
+    return response;
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set('x-middleware-cache', 'no-cache');
+  return response;
 }
 
 export const config = {

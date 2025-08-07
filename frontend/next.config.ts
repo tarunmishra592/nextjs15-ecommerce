@@ -2,23 +2,6 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  async headers() {
-    return [
-      {
-        source: '/api/:path*',
-        headers: [
-          { 
-            key: 'Access-Control-Allow-Origin', 
-            value: 'https://nextjs15-ecommerce-sooty.vercel.app' 
-          },
-          { 
-            key: 'Access-Control-Allow-Credentials', 
-            value: 'true' 
-          }
-        ]
-      }
-    ];
-  },
   images: {
     remotePatterns: [
       {
