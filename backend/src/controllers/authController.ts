@@ -15,13 +15,20 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   try {
     const { email, password } = req.body;
     const data = await authService.login(email, password);
+    // Get the requesting origin dynamically
+    const requestOrigin = req.get('origin') || '';
+    const isProduction = process.env.NODE_ENV === 'production';
+    
     res.cookie('token', data.token, {
       httpOnly: true,
-      secure: true, // Always true in Vercel
-      sameSite: 'none', // For cross-origin
-      maxAge: 24 * 60 * 60 * 1000,
+      secure: true,
+      sameSite: 'none',
       path: '/',
-      domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
+      // Use the specific domain instead of .vercel.app
+      domain: isProduction 
+        ? new URL(requestOrigin).hostname // e.g. "nextjs15-ecommerce-sooty.vercel.app"
+        : 'localhost',
+      maxAge: 30 * 24 * 60 * 60 * 1000
     });
     res.status(200).json({ token: data.token, user: data.user});
   } catch (err) {

@@ -14,19 +14,13 @@ import contactRoutes from './routes/contactRoutes';
 
 const app = express();
 
-// Middlewares
 const allowedOrigins = [
     'https://nextjs15-ecommerce-sooty.vercel.app',// Vercel frontend
     'http://localhost:3000', // local dev
     'http://localhost:3001' // local dev
 ];
-  
-// app.use(cors({
-//     origin: allowedOrigins,
-//     credentials: true,
-// }));
 
-// Update your CORS configuration
+// Middlewares
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)

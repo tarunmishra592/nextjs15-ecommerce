@@ -26,6 +26,19 @@ export function middleware(req: NextRequest) {
   const isAuthPath = authPaths.some(path => pathname.startsWith(path));
   const token = req.cookies.get('token')?.value;
 
+  const headers = Object.fromEntries(req.headers.entries());
+  console.log('Request headers:', headers);
+  
+  // 2. Alternative cookie access methods
+  const cookieHeader = req.headers.get('cookie');
+  console.log('Raw cookie header:', cookieHeader);
+  
+  // 3. Manual cookie parsing
+  const manualToken = cookieHeader?.split(';')
+    .find(c => c.trim().startsWith('token='))
+    ?.split('=')[1];
+  console.log('Manually parsed token:', manualToken);
+
   // Handle protected paths
   if (isProtected && !token) {
     const loginUrl = new URL('/login', req.url);
