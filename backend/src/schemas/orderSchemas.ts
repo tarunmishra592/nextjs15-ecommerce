@@ -8,7 +8,7 @@ export const createOrderSchema = z.object({
         quantity: z.number().int().min(1),
       })
     ).nonempty('Order must contain at least one item'),
-    paymentMethod: z.enum(['stripe', 'paypal', 'cod']),
+    paymentMethod: z.enum(['razorpay', 'cod']),
     shippingAddressId: z.string().min(1),
   }),
 });
