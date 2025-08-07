@@ -30,8 +30,6 @@ export default function CheckoutPage() {
         return <AddressForm />
       case 'payment':
         return <PaymentForm />
-      case 'review':
-        return <OrderSummary />
       default:
         return null
     }

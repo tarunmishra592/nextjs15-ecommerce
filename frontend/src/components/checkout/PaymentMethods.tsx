@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation'
 import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
 import { setPaymentMethod, paymentInitiated, checkoutFailed } from '@/store/slices/checkoutSlice';
 import { Button } from '@/components/ui/button';
 import { loadRazorpay } from '@/lib/razorpay';
 import { verifyPayment } from '@/services/checkoutService';
 import { selectShippingAddress } from '@/store/slices/checkoutSlice';
-import { selectCartTotal } from '@/store/slices/cartSlice';
+import { selectCartItems, selectCartTotal } from '@/store/slices/cartSlice';
 import { useSelector } from 'react-redux';
-import { RazorpayOrder, User } from '@/types';
+import { Order, RazorpayOrder, User } from '@/types';
 import { apiFetch } from '@/lib/api';
 import { selectUser } from '@/store/slices/authSlice';
 
@@ -35,6 +36,8 @@ export const PaymentMethods = () => {
   const user = useAppSelector(selectUser)
   const shippingAddress = useAppSelector(selectShippingAddress);
   const cartTotal = useAppSelector(selectCartTotal);
+  const cartItems = useAppSelector(selectCartItems);
+  const router = useRouter()
 
   const handleSelect = (method: PaymentMethod) => {
     setSelectedMethod(method);
@@ -46,37 +49,60 @@ export const PaymentMethods = () => {
       try {
         setIsProcessing(true);
         
-        // 1. Create order directly in component
-        const order = await apiFetch<RazorpayOrder>('/payment', {
+        // 1. First create the order in your backend
+        const orderData = {
+          items: cartItems.map(item => ({
+            productId: item.product._id,
+            quantity: item.quantity
+          })),
+          shippingAddressId: {address: 'test'}, // You'll need to get this from state
+          paymentMethod: 'razorpay',
+          amount: cartTotal
+        };
+  
+        const order = await apiFetch<Order>('/orders', {
           method: 'POST',
-          data: { amount: cartTotal * 100 }
+          data: orderData
         });
-        
-        // 2. Save only the serializable order data to Redux
-        dispatch(paymentInitiated({
-          id: order.id,
-          amount: order.amount,
-          currency: order.currency,
-          status: 'created'
-        }));
-        
-        // 3. Load and open Razorpay
+  
+        // 2. Then create Razorpay payment for this order
+        const paymentOrder = await apiFetch<RazorpayOrder>('/payment', {
+          method: 'POST',
+          data: { 
+            amount: cartTotal * 100,
+            orderId: order._id // Pass your internal order ID
+          }
+        });
+  
+        // 3. Initialize Razorpay payment
         await loadRazorpay();
         
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
-          amount: order.amount,
-          currency: order.currency,
+          amount: paymentOrder.amount,
+          currency: paymentOrder.currency,
           name: 'Your Store Name',
-          description: 'Order Payment',
-          order_id: order.id,
-          handler: (response: any) => {
-            // Handle payment verification
-            dispatch(verifyPayment({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
-            }));
+          description: `Order #${order._id}`,
+          order_id: paymentOrder.id,
+          handler: async (response: any) => {
+            try {
+              // Verify payment and update order status
+              await apiFetch(`/payment/verify`, {
+                method: 'POST',
+                data: {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                  orderId: order._id
+                }
+              });
+              
+              // Redirect to confirmation page
+              router.push(`/order-confirmation?orderId=${order._id}`);
+            } catch (error) {
+              console.error('Payment verification failed:', error);
+              dispatch(checkoutFailed({message: 'Payment verification failed'}));
+            }
           },
           prefill: {
             name: `${shippingAddress?.firstName} ${shippingAddress?.lastName}`,
@@ -88,12 +114,16 @@ export const PaymentMethods = () => {
           }
         };
   
-        const rzp = new window.Razorpay(options);
+        const rzp: any = new window.Razorpay(options);
         rzp.open();
+        
+        rzp.on('payment.failed', (response: any) => {
+          dispatch(checkoutFailed({message: 'Payment failed or was declined'}));
+          console.error('Payment failed:', response);
+        });
+  
       } catch (error) {
-        dispatch(checkoutFailed({
-          message: error instanceof Error ? error.message : 'Payment failed'
-        }));
+        dispatch(checkoutFailed({message: error instanceof Error ? error.message : 'Payment failed'}));
       } finally {
         setIsProcessing(false);
       }

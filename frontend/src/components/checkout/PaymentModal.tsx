@@ -14,6 +14,8 @@ export default function PaymentModal() {
     const initializePayment = async () => {
       try {
         await loadRazorpay()
+
+        console.log('process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!',  process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!)
         
         const options = {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,

@@ -1,33 +1,78 @@
+import mongoose from 'mongoose';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';
 import { IUser } from '../models/User';
 
-export async function createOrder(userId: string, items: { productId: string; quantity: number }[], shippingAddressId: string, paymentMethod: string) {
-  // Fetch products to lock price
-  const products = await Product.find({ _id: { $in: items.map(i => i.productId) } });
-  if (products.length !== items.length) throw Object.assign(new Error('Some products not found'), { statusCode: 400 });
+export async function createOrder(
+  userId: string,
+  items: { productId: string; quantity: number }[],
+  shippingAddressId: string,
+  paymentMethod: string
+) {
+  // Start transaction
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  const orderItems = items.map(i => {
-    const prod = products.find(p => p._id.toString() === i.productId)!;
-    return {
-      product: prod._id,
-      quantity: i.quantity,
-      priceAt: prod.price,
-    };
-  });
+  try {
+    // 1. Verify products and lock prices
+    const products = await Product.find({ 
+      _id: { $in: items.map(i => i.productId) } 
+    }).session(session);
 
-  const total = orderItems.reduce((sum, it) => sum + it.priceAt * it.quantity, 0);
+    if (products.length !== items.length) {
+      throw new Error('Some products not found');
+    }
 
-  const order = await Order.create({
-    user: userId,
-    items: orderItems,
-    shippingAddress: shippingAddressId,
-    total,
-    paid: false,
-    status: 'pending',
-  });
+    // 2. Prepare order items with locked prices
+    const orderItems = items.map(item => {
+      const product = products.find(p => p._id.toString() === item.productId)!;
+      return {
+        product: product._id,
+        quantity: item.quantity,
+        priceAtOrder: product.price,
+        name: product.name // Store product name at time of order
+      };
+    });
 
-  return order;
+    // 3. Calculate totals
+    const subtotal = orderItems.reduce(
+      (sum, item) => sum + (item.priceAtOrder * item.quantity),
+      0
+    );
+    const total = subtotal; // Add shipping, taxes etc. if needed
+
+    // 4. Create order
+    const order = await Order.create([{
+      user: userId,
+      items: orderItems,
+      shippingAddress: shippingAddressId,
+      paymentMethod,
+      status: 'pending_payment',
+      subtotal,
+      total,
+      paid: false
+    }], { session });
+
+    // 5. Reserve inventory
+    for (const item of items) {
+      await Product.updateOne(
+        { _id: item.productId },
+        { $inc: { inventory: -item.quantity } },
+        { session }
+      );
+    }
+
+    // Commit transaction
+    await session.commitTransaction();
+    
+    return order[0];
+  } catch (error) {
+    // Abort transaction on error
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
 }
 
 export async function listOrders(userId: string) {

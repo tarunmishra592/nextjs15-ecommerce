@@ -1,7 +1,8 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { config } from '../config/config';
-import { Order as OrderModel } from '../models/Order';
+import { Order, Order as OrderModel } from '../models/Order';
+import mongoose from 'mongoose';
 
 const razorpay = new Razorpay({
   key_id: config.RAZORPAY_KEY_ID,
@@ -17,30 +18,60 @@ export async function createRazorpayOrder(amount: number, currency = 'INR', rece
   return order;
 }
 
-export async function verifyPaymentSignature(payload: {
-  razorpay_order_id: string;
-  razorpay_payment_id: string;
-  razorpay_signature: string;
-}, internalOrderId?: string) {
-  const bodyString = `${payload.razorpay_order_id}|${payload.razorpay_payment_id}`;
-  const expected = crypto
+// services/paymentService.ts
+export async function verifyPaymentSignature(
+  payload: {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+  },
+  orderId: string
+) {
+  // 1. Verify Razorpay signature
+  const body = `${payload.razorpay_order_id}|${payload.razorpay_payment_id}`;
+  const expectedSignature = crypto
     .createHmac('sha256', config.RAZORPAY_KEY_SECRET)
-    .update(bodyString)
+    .update(body)
     .digest('hex');
 
-  if (expected !== payload.razorpay_signature) {
-    throw Object.assign(new Error('Invalid payment signature'), { statusCode: 400 });
+  if (expectedSignature !== payload.razorpay_signature) {
+    throw new Error('Invalid payment signature');
   }
 
-  // Optionally update your internal order in DB
-  if (internalOrderId) {
-    await OrderModel.findByIdAndUpdate(internalOrderId, {
-      paid: true,
-      paidAt: new Date(),
-      razorpayOrderId: payload.razorpay_order_id,
-      razorpayPaymentId: payload.razorpay_payment_id,
-    });
-  }
+  // 2. Update order status
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  return true;
+  try {
+    const order = await Order.findByIdAndUpdate(
+      orderId,
+      {
+        $set: {
+          paid: true,
+          paidAt: new Date(),
+          status: 'processing',
+          razorpayOrderId: payload.razorpay_order_id,
+          razorpayPaymentId: payload.razorpay_payment_id
+        }
+      },
+      { new: true, session }
+    ).populate('items.product');
+
+    if (!order) {
+      throw new Error('Order not found');
+    }
+
+    // Here you might:
+    // - Send confirmation email
+    // - Trigger fulfillment process
+    // - Update analytics
+
+    await session.commitTransaction();
+    return order;
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
 }

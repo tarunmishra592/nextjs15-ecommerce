@@ -4,7 +4,8 @@ import {
   paymentInitiated, 
   paymentVerified,
   checkoutFailed,
-  startLoading 
+  startLoading, 
+  setCheckoutStep
 } from "@/store/slices/checkoutSlice";
 import type { 
   RazorpayOrder, 
