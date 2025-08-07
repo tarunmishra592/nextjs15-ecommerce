@@ -1,5 +1,5 @@
 // src/lib/api.ts
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 // ========================
 // Type Definitions
@@ -141,7 +141,7 @@ apiClient.interceptors.response.use(
 // ========================
 export async function apiFetch<T = unknown>(
   path: string,
-  options?: AxiosRequestConfig
+  options?: any
 ): Promise<T> {
   try {
     const response: AxiosResponse<T> = await apiClient(path, options);
