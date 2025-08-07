@@ -64,7 +64,7 @@ export const PaymentMethods = () => {
         await loadRazorpay();
         
         const options = {
-          key: process.env.RAZORPAY_KEY_ID!,
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
           amount: order.amount,
           currency: order.currency,
           name: 'Your Store Name',
