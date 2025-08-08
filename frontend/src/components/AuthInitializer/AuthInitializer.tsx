@@ -12,17 +12,20 @@ export default function AuthInitializer() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    verifyToken()
+    const initializeAuth = async () => {
+      const result = await verifyAuth(dispatch);
+      
+      if (result?.token) {
+        await Promise.all([
+          dispatch(fetchUser()),
+          dispatch(fetchCart()),
+          dispatch(fetchWishlist())
+        ]);
+      }
+    };
+    
+    initializeAuth();
   }, [dispatch]);
-
-  const verifyToken = async () => {
-    const isValid = await verifyAuth(dispatch);
-    if (isValid?.token) {
-      dispatch(fetchUser());
-      dispatch(fetchCart())
-      dispatch(fetchWishlist())
-    }
-  }
 
   return null; // This component doesn't render anything
 }

@@ -12,11 +12,12 @@ export const clientApi = axios.create({
   }
 });
 
+
 clientApi.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      window.location.href = '/login';
+      // window.location.href = '/login';
     }
     throw error;
   }
