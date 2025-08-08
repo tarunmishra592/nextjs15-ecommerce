@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react';
 import { useAppDispatch } from '@/store/hooks'
 import { z } from 'zod'
 import Image from 'next/image'
