@@ -1,6 +1,5 @@
 'use client'
 import { apiFetch } from "@/lib/api";
-import { Order } from "@/types";
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -61,7 +60,7 @@ export default function ConfirmationPage() {
             <h2 className="text-lg font-semibold mb-4">Shipping Details</h2>
             {order.shippingAddress && (
               <div className="space-y-2">
-                <p>{order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
+                <p className="font-semibold">{order.shippingAddress.firstName} {order.shippingAddress.lastName}</p>
                 <p>{order.shippingAddress.address}</p>
                 {order.shippingAddress.address2 && <p>{order.shippingAddress.address2}</p>}
                 <p>{order.shippingAddress.city}, {order.shippingAddress.state} {order.shippingAddress.postalCode}</p>
@@ -80,6 +79,8 @@ export default function ConfirmationPage() {
                 <div className="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
                   {item.product?.images?.[0] && (
                     <Image 
+                      width={100}
+                      height={100}
                       src={item.product.images[0]} 
                       alt={item.product.name}
                       className="w-full h-full object-cover"
@@ -89,10 +90,10 @@ export default function ConfirmationPage() {
                 <div className="ml-4 flex-1">
                   <h3 className="font-medium">{item.product?.name || 'Product'}</h3>
                   <p className="text-gray-600">Qty: {item.quantity}</p>
-                  <p className="text-gray-600">₹{(item.priceAtOrder / 100).toFixed(2)} each</p>
+                  <p className="text-gray-600">₹{(item.product.price / 100).toFixed(2)} each</p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">₹{(item.priceAtOrder * item.quantity / 100).toFixed(2)}</p>
+                  <p className="font-medium">₹{(item.product.price * item.quantity / 100).toFixed(2)}</p>
                 </div>
               </div>
             ))}

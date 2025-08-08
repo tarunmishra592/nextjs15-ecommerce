@@ -1,6 +1,15 @@
 // src/lib/api.ts
 import axios, { AxiosResponse } from 'axios';
 
+function getCookie(name: string) {
+  // This only checks cookies accessible to the current path
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return null;
+}
+
+
 // ========================
 // Type Definitions
 // ========================
@@ -76,14 +85,11 @@ const apiClient = axios.create({
 // ========================
 // Request Interceptor
 // ========================
-apiClient.interceptors.request.use((config: any) => {
-  // Only attempt to get token on client-side
+apiClient.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('token');
-    console.log('token---', token)
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    console.log('All cookies:', document.cookie); // Check what's actually available
+    const token = getCookie('token');
+    console.log('Token from cookies:', token);
   }
   return config;
 });
@@ -95,7 +101,7 @@ apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     // Store token if present in response
     if (response.data?.token) {
-      localStorage.setItem('token', response.data.token);
+      document.cookie = `token=${response.data.token}; path=/; max-age=${60 * 60 * 24 * 7}${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
     }
     return response;
   },
@@ -116,7 +122,7 @@ apiClient.interceptors.response.use(
     // Handle 401 Unauthorized
     if (status === 401) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
+        document.cookie = 'token' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
         window.location.href = '/login';
       }
       throw new ApiError(
