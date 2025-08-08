@@ -63,7 +63,6 @@ export interface AuthTokens {
 
 export interface AuthState {
     user: any;
-    token: string | null;
     loading: boolean;
     isAuthenticated: boolean;
     error: string | {message: string, status: number};

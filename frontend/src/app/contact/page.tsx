@@ -63,16 +63,16 @@ export default function ContactPage() {
         <h1 className="text-3xl font-bold mb-6">Get in Touch</h1>
 
         {submissionState && (
-          <Alert variant={submissionState.success ? 'default' : 'destructive'} className="mb-6">
+          <Alert variant={submissionState.success ? 'default' : 'destructive'} className={`mb-6 ${submissionState.success ? 'text-green-500' : 'text-red-500'}`}>
             {submissionState.success ? (
-              <FiCheckCircle className="h-4 w-4 text-green-500" />
+              <FiCheckCircle className="h-4 w-4" />
             ) : (
-              <FiAlertCircle className="h-4 w-4 text-red-500" />
+              <FiAlertCircle className="h-4 w-4" />
             )}
             <AlertTitle>
               {submissionState.success ? 'Success!' : 'Error'}
             </AlertTitle>
-            <AlertDescription>
+            <AlertDescription className={`${submissionState.success ? 'text-green-500' : 'text-red-500'}`}>
               {submissionState.message}
             </AlertDescription>
           </Alert>

@@ -1,16 +1,15 @@
-import { apiFetch } from "@/lib/api";
 import { AppDispatch } from "@/store/store";
 import { 
   paymentInitiated, 
   paymentVerified,
   checkoutFailed,
   startLoading, 
-  setCheckoutStep
 } from "@/store/slices/checkoutSlice";
 import type { 
   RazorpayOrder, 
   PaymentVerificationPayload 
 } from "@/types";
+import { apiFetch } from "@/lib/client-api";
 
 export const initiatePayment = (amount: number) => 
   async (dispatch: AppDispatch) => {

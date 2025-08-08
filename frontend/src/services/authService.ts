@@ -1,4 +1,3 @@
-import { apiFetch } from '@/lib/api';
 import { AppDispatch } from '@/store/store';
 import { 
   startLoading, 
@@ -12,6 +11,7 @@ import type {
   User 
 } from '@/types';
 import { setAuthCookie } from '@/lib/token';
+import { apiFetch } from '@/lib/client-api';
 
 export const login = (credentials: LoginCredentials) => {
   return async (dispatch: AppDispatch) => {
@@ -46,7 +46,6 @@ export const fetchUser = () => {
       dispatch(fetchUserSuccess(data));
       return true;
     } catch (err: any) {
-      localStorage.removeItem('token');
       const errorPayload = {
         message: err.message || 'Failed to fetch user',
         status: err.status || 500

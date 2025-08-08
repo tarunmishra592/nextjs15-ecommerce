@@ -9,6 +9,7 @@ export interface IOrderItem {
 export interface IOrder extends Document {
   user: mongoose.Types.ObjectId;
   items: IOrderItem[];
+  paymentMethod: string;
   shippingAddress: mongoose.Types.ObjectId;
   total: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
@@ -31,6 +32,7 @@ const OrderSchema = new Schema<IOrder>(
     items: { type: [OrderItemSchema], required: true },
     shippingAddress: { type: Schema.Types.ObjectId, ref: 'Address', required: true },
     total: { type: Number, required: true, min: 0 },
+    paymentMethod: String,
     status: {
       type: String,
       enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled'],

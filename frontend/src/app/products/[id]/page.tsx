@@ -1,6 +1,6 @@
 import ProductActions from '@/components/ProductActions/ProductActions';
 import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGallery';
-import { apiFetch } from '@/lib/api';
+import { apiFetch } from '@/lib/client-api';
 
 type Props = {
   params: Promise<{ id: string }>

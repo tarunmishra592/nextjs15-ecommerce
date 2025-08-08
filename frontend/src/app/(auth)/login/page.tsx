@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { signIn } from 'next-auth/react';
 import { useAppDispatch } from '@/store/hooks'
 import { z } from 'zod'
 import Image from 'next/image'
@@ -61,6 +62,8 @@ export default function LoginPage() {
       setIsLoading(false)
     }
   }
+
+
 
   return (
     <div className="flex">
@@ -169,7 +172,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-8">
+          {/* <div className="mt-8">
             <div className="relative">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-300"></div>
@@ -189,7 +192,7 @@ export default function LoginPage() {
                 </svg>
               </button>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

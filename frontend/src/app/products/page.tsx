@@ -1,9 +1,9 @@
 // app/products/page.tsx
 
 import { Product } from '@/types'
-import { apiFetch } from '@/lib/api'
 import Filters from '@/components/Filters/Filters'
 import ProductListing from '@/components/ProductListing/ProductListing'
+import { apiFetch } from '@/lib/client-api';
 
 
 export default async function ProductListPage({

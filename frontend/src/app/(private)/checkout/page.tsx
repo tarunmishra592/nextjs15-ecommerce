@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation'
 import { selectCartItems } from '@/store/slices/cartSlice'
 import AddressForm from '@/components/checkout/AddressForm'
 import PaymentForm from '@/components/checkout/PaymentForm'
-import OrderSummary from '@/components/checkout/OrderSummary'
 import { fetchCart } from '@/services/cartService'
 
 export default function CheckoutPage() {

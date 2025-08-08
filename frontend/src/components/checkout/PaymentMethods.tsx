@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
-import { RootState, useAppDispatch, useAppSelector } from '@/store/store';
-import { setPaymentMethod, paymentInitiated, checkoutFailed } from '@/store/slices/checkoutSlice';
+import { useAppDispatch, useAppSelector } from '@/store/store';
+import { setPaymentMethod, checkoutFailed } from '@/store/slices/checkoutSlice';
 import { Button } from '@/components/ui/button';
 import { loadRazorpay } from '@/lib/razorpay';
-import { verifyPayment } from '@/services/checkoutService';
 import { selectShippingAddress } from '@/store/slices/checkoutSlice';
 import { selectCartItems, selectCartTotal } from '@/store/slices/cartSlice';
-import { useSelector } from 'react-redux';
-import { Order, RazorpayOrder, User } from '@/types';
-import { apiFetch } from '@/lib/api';
+import { Order, RazorpayOrder } from '@/types';
 import { selectUser } from '@/store/slices/authSlice';
+import { apiFetch } from '@/lib/client-api';
+import { fetchCart } from '@/services/cartService';
 
 type PaymentMethod = 'razorpay' | 'cod' | 'wallet';
 
@@ -96,7 +95,10 @@ export const PaymentMethods = () => {
                   orderId: order._id
                 }
               });
-              
+
+              // Clear Cart
+              await apiFetch(`/cart/empty`, { method: 'DELETE'})
+              dispatch(fetchCart())
               // Redirect to confirmation page
               router.push(`/order-confirmation?orderId=${order._id}`);
             } catch (error) {

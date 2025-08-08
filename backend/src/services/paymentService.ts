@@ -1,8 +1,9 @@
 import Razorpay from 'razorpay';
 import crypto from 'crypto';
 import { config } from '../config/config';
-import { Order, Order as OrderModel } from '../models/Order';
+import { Order } from '../models/Order';
 import mongoose from 'mongoose';
+import { sendOrderConfirmationEmail } from './emailService'
 
 const razorpay = new Razorpay({
   key_id: config.RAZORPAY_KEY_ID,
@@ -43,7 +44,7 @@ export async function verifyPaymentSignature(
   session.startTransaction();
 
   try {
-    const order = await Order.findByIdAndUpdate(
+    const order: any = await Order.findByIdAndUpdate(
       orderId,
       {
         $set: {
@@ -55,16 +56,14 @@ export async function verifyPaymentSignature(
         }
       },
       { new: true, session }
-    ).populate('items.product');
+    ).populate('items.product').populate('user', 'email');;
+
 
     if (!order) {
       throw new Error('Order not found');
     }
 
-    // Here you might:
-    // - Send confirmation email
-    // - Trigger fulfillment process
-    // - Update analytics
+    await sendOrderConfirmationEmail(order?.user?.email, order);
 
     await session.commitTransaction();
     return order;

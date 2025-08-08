@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/client-api";
 
 export async function submitContactForm(formData: {
     name: string

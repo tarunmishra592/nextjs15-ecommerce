@@ -8,9 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { apiFetch } from '@/lib/api'
 import { Check, Plus } from 'lucide-react'
 import { useSelector } from 'react-redux'
+import { apiFetch } from '@/lib/client-api'
 
 const addressSchema = z.object({
   firstName: z.string().min(1, 'Required').max(50, 'Too long'),

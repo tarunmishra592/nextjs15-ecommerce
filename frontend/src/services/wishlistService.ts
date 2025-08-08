@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/client-api";
 import { addWishlistItemSuccess, fetchWishlistSuccess, operationFailed, removeWishlistItemSuccess, startLoading } from "@/store/slices/wishlistSlice";
 import { AppDispatch } from "@/store/store";
 import { ApiErrorResponse, WishlistItems } from "@/types";

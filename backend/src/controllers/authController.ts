@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import * as authService from '../services/authService';
+import { User } from '../models/User';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -41,35 +42,41 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 
-export const verifyAuth = (req: Request, res: Response) => {
+
+export const verifyAuth = async (req: Request, res: Response) => {
   try {
-    // 1. Get token from cookies
-    const token = req.cookies.authToken;
+    let token = req.cookies.token;
+
+    if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
     
-    // 2. Verify token existence
     if (!token) {
       return res.status(401).json({ isAuthenticated: false });
     }
 
-    // 3. Verify JWT validity
-    jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
-      if (err) {
-        return res.status(401).json({ 
-          isAuthenticated: false,
-          error: 'Invalid token'
-        });
+    // Verify token and decode user ID
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { sub: string };
+    
+    // Fetch user from database
+    const user = await User.findById(decoded.sub).select('-password');
+    
+    if (!user) {
+      return res.status(401).json({ isAuthenticated: false });
+    }
+
+    res.status(200).json({ 
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        // Add other safe fields
       }
-      
-      // 4. Return successful verification
-      res.status(200).json({ token, user: decoded });
     });
 
   } catch (err) {
-    console.error('Auth verification error:', err);
-    res.status(500).json({ 
-      isAuthenticated: false,
-      error: 'Internal server error' 
-    });
+    res.status(401).json({ isAuthenticated: false });
   }
 };
 

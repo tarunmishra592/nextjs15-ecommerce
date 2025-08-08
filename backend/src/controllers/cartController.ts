@@ -40,3 +40,11 @@ export const deleteCartItem = async (req: Request, res: Response, next: NextFunc
     next(err);
   }
 };
+export const clearCart = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const clearedCart = await cartService.clearUserCart(req.user!.sub);
+    res.json(clearedCart);
+  } catch (err) {
+    next(err);
+  }
+};

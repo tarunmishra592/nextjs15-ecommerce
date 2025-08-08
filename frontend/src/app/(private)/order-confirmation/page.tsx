@@ -1,5 +1,5 @@
 'use client'
-import { apiFetch } from "@/lib/api";
+import { apiFetch } from "@/lib/client-api";
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -30,6 +30,17 @@ export default function ConfirmationPage() {
     fetchOrder();
   }, [params]);
 
+  const getStatusBadge = (status: string) => {
+    const statusMap: Record<string, string> = {
+      'pending': 'bg-yellow-100 text-yellow-800',
+      'processing': 'bg-blue-100 text-blue-800',
+      'completed': 'bg-green-100 text-green-800',
+      'cancelled': 'bg-red-100 text-red-800',
+      'shipped': 'bg-purple-100 text-purple-800',
+    };
+    return statusMap[status.toLowerCase()] || 'bg-gray-100 text-gray-800';
+  };
+
   if (loading) return <div className="p-4 text-center">Loading order details...</div>;
   if (!order) return <div className="p-4 text-center">Order not found</div>;
 
@@ -50,7 +61,9 @@ export default function ConfirmationPage() {
             <div className="space-y-2">
               <p><span className="font-medium">Order ID:</span> {order._id}</p>
               <p><span className="font-medium">Date:</span> {new Date(order.createdAt).toLocaleString()}</p>
-              <p><span className="font-medium">Status:</span> <span className="capitalize">{order.status.replace('_', ' ')}</span></p>
+              <p><span className="font-medium">Status:</span> 
+                <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(order.status)}`}>{order.status.replace('_', ' ')}</span>
+              </p>
               <p><span className="font-medium">Payment Method:</span> {order.paymentMethod}</p>
               <p><span className="font-medium">Total Paid:</span> ₹{(order.total / 100).toFixed(2)}</p>
             </div>
@@ -75,7 +88,7 @@ export default function ConfirmationPage() {
           <h2 className="text-lg font-semibold mb-4">Order Items</h2>
           <div className="space-y-4">
             {order.items.map((item: any) => (
-              <div key={item._id} className="flex border-b pb-4">
+              <div key={item.product.name} className="flex border-b pb-4">
                 <div className="flex-shrink-0 w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
                   {item.product?.images?.[0] && (
                     <Image 

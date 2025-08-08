@@ -6,6 +6,7 @@ import {
   addCart,
   updateCart,
   deleteCartItem,
+  clearCart
 } from '../controllers/cartController';
 import {
   addCartItemSchema,
@@ -19,6 +20,7 @@ router.use(authMiddleware);
 router.get('/', getCart);
 router.post('/', validate(addCartItemSchema), addCart);
 router.patch('/:productId', validate(updateCartItemSchema), updateCart);
+router.delete('/empty', clearCart);
 router.delete('/:productId', validate(removeCartItemSchema), deleteCartItem);
 
 export default router;

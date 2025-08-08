@@ -1,5 +1,4 @@
 'use client'
-import { Button } from '@/components/ui/button'
 import { useAppSelector } from '@/store/store'
 import { selectCartItems, selectCartTotal } from '@/store/slices/cartSlice'
 import CartItem from '@/components/CartItem/CartItem'
@@ -26,9 +25,6 @@ export default function OrderSummary() {
           <span>${total.toFixed(2)}</span>
         </div>
       </div>
-      <Button className="w-full mt-6">
-        Place Order
-      </Button>
     </div>
   )
 }

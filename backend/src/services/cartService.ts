@@ -47,3 +47,22 @@ export async function removeCartItem(userId: string, productId: string) {
   ).exec();
   return getCart(userId);
 }
+
+
+export async function clearUserCart(userId: string) {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { $set: { cart: [] } }, // Empty the cart array
+    { new: true }
+  ).exec();
+
+  if (!user) {
+    throw Object.assign(new Error('User not found'), { statusCode: 404 });
+  }
+
+  return {
+    items: [],
+    total: 0,
+    count: 0
+  };
+}

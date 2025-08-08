@@ -1,12 +1,12 @@
 'use client'
 import { useEffect, useState } from 'react';
-import { apiFetch } from '@/lib/api';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import toast from 'react-hot-toast';
+import { apiFetch } from '@/lib/client-api';
 
 interface User {
   _id: string;

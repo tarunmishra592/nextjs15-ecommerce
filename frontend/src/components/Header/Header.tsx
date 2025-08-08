@@ -9,7 +9,7 @@ import { WishlistIcon } from '../WishlistIcon/WishlistIcon'
 import { useState } from 'react'
 import CartPopover from '../CartPopover/CartPopover'
 import { selectUser } from '@/store/slices/authSlice'
-import { apiFetch } from '@/lib/api'
+import { apiFetch } from '@/lib/client-api'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)

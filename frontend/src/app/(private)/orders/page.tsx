@@ -1,16 +1,16 @@
 import Link from 'next/link';
-import { apiFetch } from '@/lib/api';
 import type { Order } from '@/types';
 import { Button } from '@/components/ui/button';
 import { AlertCircle, ChevronRight, Package } from 'lucide-react';
 import { RetryButton } from './RetryButton';
+import { serverFetch } from '@/lib/server-api';
 
 export default async function OrdersPage() {
   let orders: Order[] = [];
   let error: string | null = null;
 
   try {
-    orders = await apiFetch<Order[]>('/orders');
+    orders = await serverFetch<Order[]>('/orders');
   } catch (err) {
     console.error(err);
     error = 'Failed to load orders. Please try again later.';

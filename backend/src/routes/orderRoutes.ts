@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   createOrder,
   listOrders,
-  getOrder,
+  getOrder
 } from '../controllers/orderController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validate } from '../middlewares/validate';

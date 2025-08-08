@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { signupSchema, type SignupInput } from '@/lib/zod'
-import { apiFetch } from '@/lib/api'
 import Image from 'next/image'
+import { apiFetch } from '@/lib/client-api'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -27,10 +27,7 @@ export default function RegisterPage() {
     try {
       await apiFetch('/auth/signup', {
         method: 'POST',
-        data: data,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        data: data
       })
       router.push('/login?registered=true')
     } catch (err: any) {

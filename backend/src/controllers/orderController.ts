@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { Order } from '../models/Order';
 import * as orderService from '../services/orderService';
 
 export const createOrder = async (req: Request, res: Response, next: NextFunction) => {

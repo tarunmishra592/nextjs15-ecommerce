@@ -9,7 +9,7 @@ import 'swiper/css'
 import 'swiper/css/navigation'
 import { useEffect, useRef, useState } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import { apiFetch } from '@/lib/api'
+import { apiFetch } from '@/lib/client-api'
 
 interface ProductCarouselProps {
   title: string

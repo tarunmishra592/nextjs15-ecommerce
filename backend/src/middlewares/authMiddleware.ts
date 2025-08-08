@@ -19,6 +19,12 @@ export const authMiddleware = (
 
   console.log('token be', token)
 
+  if (!token && req.headers.authorization?.startsWith('Bearer ')) {
+    token = req.headers.authorization.split(' ')[1];
+    console.log('auth token', token)
+
+  }
+
   // 2. Fallback to Authorization header if no cookie
   if (!token) {
     // const authHeader = req.headers.authorization;
