@@ -7,8 +7,9 @@ export const serverApi = axios.create({
   timeout: 10000
 });
 
-serverApi.interceptors.request.use((config) => {
-  const token = cookies().get('token')?.value;
+serverApi.interceptors.request.use(async(config) => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
