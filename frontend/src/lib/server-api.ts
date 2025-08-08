@@ -3,7 +3,7 @@ import axios from 'axios';
 import { cookies } from 'next/headers';
 
 export const serverApi = axios.create({
-  baseURL: 'http://localhost:4000/api',
+  baseURL: process.env.API_INTERNAL_URL || 'http://localhost:4000/api',
   timeout: 10000
 });
 

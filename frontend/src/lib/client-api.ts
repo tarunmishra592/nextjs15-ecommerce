@@ -4,7 +4,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 export const clientApi = axios.create({
-  baseURL: 'http://localhost:4000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
   withCredentials: true, // For automatic cookie handling
   timeout: 10000,
   headers: {
@@ -16,7 +16,7 @@ clientApi.interceptors.response.use(
   (response: AxiosResponse) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-    //   window.location.href = '/login';
+      window.location.href = '/login';
     }
     throw error;
   }
