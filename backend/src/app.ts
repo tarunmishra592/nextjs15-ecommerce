@@ -65,6 +65,9 @@ app.use('/api/contact', contactRoutes);
 
 app.use('/api/payment', paymentRoutes);
 
+
+
+
 app.get('/health', (req, res) => {
     return res.json({message:'Backend Running...'})
 })

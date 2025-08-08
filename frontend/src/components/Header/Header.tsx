@@ -9,6 +9,7 @@ import { WishlistIcon } from '../WishlistIcon/WishlistIcon'
 import { useState } from 'react'
 import CartPopover from '../CartPopover/CartPopover'
 import { selectUser } from '@/store/slices/authSlice'
+import { apiFetch } from '@/lib/api'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,6 +24,25 @@ export default function Header() {
   const toggleAccountMenu = () => {
     setIsAccountOpen(!isAccountOpen)
     setIsMenuOpen(false)
+  }
+
+  const handleLogout = async() => {
+    try {
+      // 1. Call backend logout endpoint
+      await apiFetch('/auth/logout', {
+        method: 'POST',
+        credentials: 'include', // Necessary for cookies
+      });
+  
+      // 2. Force full page reload to clear all states
+      window.location.href = '/login';
+      
+    } catch (error) {
+      console.error('Logout failed:', error);
+      // Fallback: Force client-side cleanup
+      document.cookie = 'authToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+      window.location.href = '/login';
+    }
   }
 
   return (
@@ -119,10 +139,7 @@ export default function Header() {
                       My Orders
                     </Link>
                     <button
-                      onClick={() => {
-                        // Handle logout
-                        setIsAccountOpen(false)
-                      }}
+                      onClick={handleLogout}
                       className="block w-full text-left px-4 py-2 text-sm hover:bg-green-50 text-red-600"
                     >
                       Sign Out

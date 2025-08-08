@@ -5,6 +5,7 @@ import { RootState } from '../store';
 const initialState: AuthState = { 
   user: null, 
   token: null, 
+  isAuthenticated: false,
   loading: false, 
   error: '' 
 };
@@ -30,7 +31,6 @@ export const authSlice = createSlice({
     setUser(state, action: PayloadAction<any>) {
       state.user = action.payload;
     },
-    
     // Loading/error states
     startLoading(state) {
       state.loading = true;
@@ -40,10 +40,10 @@ export const authSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    
     // Success actions
     loginSuccess(state, action: PayloadAction<AuthTokens>) {
       state.loading = false;
+      state.isAuthenticated = true;
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.error = '';
@@ -52,7 +52,15 @@ export const authSlice = createSlice({
       state.loading = false;
       state.user = action.payload;
       state.error = '';
-    }
+    },
+    logoutSuccess(state) {
+      state.isAuthenticated = false;
+      state.loading = false;
+    },
+    stopLoading(state) {
+      state.loading = false;
+      state.error = '';
+    },
   },
 });
 
@@ -64,7 +72,9 @@ export const {
   startLoading,
   authFailed,
   loginSuccess,
-  fetchUserSuccess
+  fetchUserSuccess,
+  logoutSuccess,
+  stopLoading,
 } = authSlice.actions;
 
 // Selectors

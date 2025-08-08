@@ -9,9 +9,7 @@ export class ApiError extends Error { /* ... */ }
 // 2. API Configuration
 // ========================
 export const getApiBaseUrl = (): string => {
-  return process.env.NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_API_URL || 'https://nextjs15-ecommerce-lg2r.vercel.app/api'
-    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+  return 'http://localhost:4000/api'
 };
 
 // ========================

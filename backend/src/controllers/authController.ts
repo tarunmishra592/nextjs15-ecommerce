@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import * as authService from '../services/authService';
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,4 +38,49 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   } catch (err) {
     next(err);
   }
+};
+
+
+export const verifyAuth = (req: Request, res: Response) => {
+  try {
+    // 1. Get token from cookies
+    const token = req.cookies.authToken;
+    
+    // 2. Verify token existence
+    if (!token) {
+      return res.status(401).json({ isAuthenticated: false });
+    }
+
+    // 3. Verify JWT validity
+    jwt.verify(token, process.env.JWT_SECRET!, (err: any, decoded: any) => {
+      if (err) {
+        return res.status(401).json({ 
+          isAuthenticated: false,
+          error: 'Invalid token'
+        });
+      }
+      
+      // 4. Return successful verification
+      res.status(200).json({ token, user: decoded });
+    });
+
+  } catch (err) {
+    console.error('Auth verification error:', err);
+    res.status(500).json({ 
+      isAuthenticated: false,
+      error: 'Internal server error' 
+    });
+  }
+};
+
+
+export const logout = (req: Request, res: Response) => {
+  res.cookie('token', '', {
+    expires: new Date(0),
+    path: '/',
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 };
