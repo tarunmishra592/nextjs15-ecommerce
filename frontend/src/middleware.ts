@@ -26,13 +26,9 @@ export function middleware(req: NextRequest) {
   const isAuthPath = authPaths.some(path => pathname.startsWith(path));
   const token = req.cookies.get('token')?.value;
 
-  console.log('All cookies:', req.cookies.getAll());
-  console.log('Cookie header:', req.headers.get('authorization'));
-
-  console.log('token', token)
+  console.log('token fe', token)
 
   // Handle protected paths
-
   if (isProtected && !token) {
     const loginUrl = new URL('/login', req.url);
     loginUrl.searchParams.set('next', pathname);

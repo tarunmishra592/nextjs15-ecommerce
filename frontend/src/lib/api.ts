@@ -1,165 +1,55 @@
-// src/lib/api.ts
 import axios, { AxiosResponse } from 'axios';
 
-function getCookie(name: string) {
-  // This only checks cookies accessible to the current path
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift();
-  return null;
-}
-
+// ========================
+// 1. Type Definitions (Keep your existing error handling)
+// ========================
+export class ApiError extends Error { /* ... */ }
 
 // ========================
-// Type Definitions
-// ========================
-export interface ApiErrorResponse {
-  message?: string;
-  error?: string;
-  statusCode?: number;
-  [key: string]: any; // Allow additional properties
-}
-
-export class ApiError extends Error {
-  status: number;
-  data: ApiErrorResponse;
-  url: string;
-
-  constructor(
-    message: string,
-    status: number,
-    url: string,
-    data: ApiErrorResponse = {}
-  ) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.url = url;
-    this.data = data;
-
-    // Maintain proper stack trace
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ApiError);
-    }
-  }
-
-  toString() {
-    return `${this.name}: ${this.message} (Status: ${this.status}, URL: ${this.url})`;
-  }
-
-  toJSON() {
-    return {
-      error: this.name,
-      message: this.message,
-      status: this.status,
-      url: this.url,
-      ...this.data
-    };
-  }
-}
-
-// ========================
-// API Configuration
+// 2. API Configuration
 // ========================
 export const getApiBaseUrl = (): string => {
-  // For production environment
-  if (process.env.NODE_ENV === 'production') {
-    return process.env.NEXT_PUBLIC_API_URL || 'https://nextjs15-ecommerce-rvcc.vercel.app/api';
-  }
-  
-  // For local development
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+  return process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_API_URL || 'https://nextjs15-ecommerce-lg2r.vercel.app/api'
+    : process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 };
 
-// Create axios instance with base config
+// ========================
+// 3. Axios Instance (Critical Change)
+// ========================
 const apiClient = axios.create({
   baseURL: getApiBaseUrl(),
-  withCredentials: true,
+  withCredentials: true, // ← The ONLY line needed for cookie forwarding
+  timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
-    'X-Requested-With': 'XMLHttpRequest'
-  },
-  timeout: 10000 // 10 seconds
+    'Content-Type': 'application/json'
+  }
 });
 
 // ========================
-// Request Interceptor
+// 4. Simplified Interceptors
 // ========================
 apiClient.interceptors.request.use((config) => {
-  if (typeof window !== 'undefined') {
-    console.log('All cookies:', document.cookie); // Check what's actually available
-    const token = getCookie('token');
-    console.log('Token from cookies:', token);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[API] Forwarding cookies automatically:', document.cookie);
   }
   return config;
 });
 
-// ========================
-// Response Interceptor
-// ========================
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => {
-    // Store token if present in response
-    if (response.data?.token) {
-      document.cookie = `token=${response.data.token}; path=/; max-age=${60 * 60 * 24 * 7}${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
+  (response: AxiosResponse) => response, // No cookie manipulation
+  (error) => {
+    if (error.response?.status === 401) {
+      window.location.href = '/login'; // Optional redirect
     }
-    return response;
-  },
-  (error: any) => {
-    // Handle network errors
-    if (error.code === 'ECONNABORTED') {
-      throw new ApiError('Request timeout', 408, error.config.url);
-    }
-    
-    if (!error.response) {
-      throw new ApiError('Network Error', 0, error.config.url);
-    }
-
-    const { status, config, data } = error.response;
-    const url = config?.url || '';
-    const errorData = data || {};
-
-    // Handle 401 Unauthorized
-    if (status === 401) {
-      if (typeof window !== 'undefined') {
-        document.cookie = 'token' + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-        window.location.href = '/login';
-      }
-      throw new ApiError(
-        errorData.message || 'Session expired',
-        status,
-        url,
-        errorData
-      );
-    }
-
-    // Handle other errors
-    throw new ApiError(
-      errorData.message || error.message || 'Request failed',
-      status,
-      url,
-      errorData
-    );
+    throw error;
   }
 );
 
 // ========================
-// Main API Fetch Function
+// 5. Export Clean API Function
 // ========================
-export async function apiFetch<T = unknown>(
-  path: string,
-  options?: any
-): Promise<T> {
-  try {
-    const response: AxiosResponse<T> = await apiClient(path, options);
-    return response.data;
-  } catch (error) {
-    if (error instanceof ApiError) {
-      throw error;
-    }
-    
-    const url = `${getApiBaseUrl()}${path}`;
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    throw new ApiError(errorMessage, 0, url);
-  }
-}
+export const apiFetch = async <T = unknown>(url: string, config?: any): Promise<T> => {
+  const response = await apiClient(url, config);
+  return response.data;
+};

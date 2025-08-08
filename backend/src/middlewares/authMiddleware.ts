@@ -15,13 +15,15 @@ export const authMiddleware = (
   next: NextFunction
 ) => {
   // 1. Try to get token from HTTP-only cookie first
-  let token = req.cookies?.authToken;
+  let token = req.cookies?.token;
+
+  console.log('token be', token)
 
   // 2. Fallback to Authorization header if no cookie
   if (!token) {
-    const authHeader = req.headers.authorization;
-    if (authHeader?.startsWith('Bearer ')) {
-      token = authHeader.split(' ')[1];
+    // const authHeader = req.headers.authorization;
+    if (token?.startsWith('Bearer ')) {
+      token = token.split(' ')[1];
     }
   }
 
@@ -54,7 +56,7 @@ export const authMiddleware = (
     // Suggest clearing cookie for certain errors
     if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
       errorResponse.shouldClearCookie = true;
-      res.clearCookie('authToken', {
+      res.clearCookie('token', {
         path: '/',
         domain: process.env.NODE_ENV === 'production' ? '.vercel.app' : undefined
       });
