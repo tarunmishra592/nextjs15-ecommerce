@@ -17,11 +17,11 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         const [featured, newProducts] = await Promise.all([
-          clientApi<Product[]>(`/products?tags=featured&limit=8`),
-          clientApi<Product[]>(`/products?tags=new&limit=8`)
+          clientApi(`/products?tags=featured&limit=8`),
+          clientApi(`/products?tags=new&limit=8`)
         ]);
-        setFeaturedProducts(featured);
-        setNewArrivals(newProducts);
+        setFeaturedProducts(featured.products);
+        setNewArrivals(newProducts.products);
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
