@@ -12,7 +12,7 @@ export interface ProductListingProps {
   products: Product[];
   searchParams: QueryParams;
   isFetchingMore: boolean;
-  sentinelRef: React.RefObject<HTMLDivElement>;
+  sentinelRef: any;
 }
 
 export default function ProductListing({ 
