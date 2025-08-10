@@ -17,7 +17,7 @@ export const loadRazorpay = (): Promise<boolean> => {
     })
 }
   
-export interface RazorpayOptions {
+interface RazorpayOptions {
     key: string
     amount: number
     currency: string

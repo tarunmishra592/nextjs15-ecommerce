@@ -12,6 +12,7 @@ export default function MainProvider({ children }: { children: ReactNode }) {
   return <Provider store={storeRef.current}>
     <Toaster 
         position="top-center"
+        reverseOrder={false}
         toastOptions={{
           duration: 3000,
           style: {

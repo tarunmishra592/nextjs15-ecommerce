@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import { User } from '../models/User';
 import { generateAccessToken } from '../utils/token';
-import { IUser } from '../models/User';
 
 const SALT_ROUNDS = 10;
 
@@ -24,4 +23,33 @@ export async function login(email: string, password: string): Promise<any> {
 
   const token = generateAccessToken({ sub: user._id.toString() });
   return {user, token};
+}
+
+
+export async function changePasswordService(
+  userId: string,
+  currentPassword: string,
+  newPassword: string
+): Promise<any> {
+  // 1. Find user
+  const user = await User.findById(userId);
+  if (!user) {
+    throw Object.assign(new Error('User not found'), { statusCode: 404 });
+  }
+
+  // 2. Verify current password
+  const isMatch = await bcrypt.compare(currentPassword, user.password);
+  if (!isMatch) {
+    throw Object.assign(new Error('Current password is incorrect'), { 
+      statusCode: 401 
+    });
+  }
+
+  // 3. Hash new password
+  const salt = await bcrypt.genSalt(10);
+  user.password = await bcrypt.hash(newPassword, salt);
+
+  // 5. Save user
+  await user.save();
+  return user
 }

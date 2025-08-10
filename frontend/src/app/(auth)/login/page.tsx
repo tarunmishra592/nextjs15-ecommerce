@@ -71,7 +71,7 @@ export default function LoginPage() {
         <Image
           src="/login-img.png" // Replace with your image path
           alt="Login background"
-          className="object-cover m-auto mt-20"
+          className="object-cover m-auto mt-16"
           width={600}
           height={400}
           priority

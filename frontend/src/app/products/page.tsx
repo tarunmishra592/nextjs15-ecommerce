@@ -3,7 +3,7 @@
 import { Product } from '@/types'
 import Filters from '@/components/Filters/Filters'
 import ProductListing from '@/components/ProductListing/ProductListing'
-import { apiFetch } from '@/lib/client-api';
+import { serverFetch } from '@/lib/server-api';
 
 
 export default async function ProductListPage({
@@ -30,7 +30,7 @@ export default async function ProductListPage({
 
 
   // Fetch products with filters
-  const products: Product[] = await apiFetch(`/products?${params.toString()}`)
+  const products: Product[] = await serverFetch(`/products?${params.toString()}`)
 
   // Extract filter options from products
   const categories = Array.from(new Set(products.map(p => p.category))).filter(Boolean)

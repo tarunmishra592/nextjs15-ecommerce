@@ -12,6 +12,7 @@ import useAuth from '@/hooks/useAuth'
 import { RootState, useAppDispatch } from '@/store/store'
 import { addCartItem } from '@/services/cartService'
 import { addWishlistItem, removeWishlistItem } from '@/services/wishlistService'
+import { formatINR } from '@/lib/utils'
 
 export default function ProductCard({ product, from=null }: { product: any, from?: string | null }) {
 
@@ -125,10 +126,12 @@ export default function ProductCard({ product, from=null }: { product: any, from
 
         {/* Price - Fixed height */}
         <div className="flex items-center gap-2 mb-2 min-h-[1.75rem]">
-          <p className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</p>
+          <p className="text-lg font-bold text-gray-900">
+            {formatINR(product.price)}
+          </p>
           {product.originalPrice && (
             <p className="text-sm text-gray-500 line-through">
-              ${product.originalPrice.toFixed(2)}
+              {formatINR(product.originalPrice)}
             </p>
           )}
         </div>

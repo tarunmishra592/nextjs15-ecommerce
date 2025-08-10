@@ -11,13 +11,13 @@ import type {
   User 
 } from '@/types';
 import { setAuthCookie } from '@/lib/token';
-import { apiFetch } from '@/lib/client-api';
+import { clientApi } from '@/lib/client-api';
 
 export const login = (credentials: LoginCredentials) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<AuthTokens>('/auth/login', {
+      const data: any = await clientApi<AuthTokens>('/auth/login', {
         method: 'POST',
         credentials: 'include',
         data: credentials,
@@ -40,8 +40,9 @@ export const fetchUser = () => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<User>('/users/profile', {
-        method: 'GET'
+      const data = await clientApi<User>('/users/profile', {
+        method: 'GET',
+        protected: true,
       });
       dispatch(fetchUserSuccess(data));
       return true;
@@ -60,7 +61,7 @@ export const register = (userData: any) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<AuthTokens>('/auth/register', {
+      const data: any = await clientApi<AuthTokens>('/auth/register', {
         method: 'POST',
         data: userData,
       });

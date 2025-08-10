@@ -1,69 +1,76 @@
+// middleware.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+// 1. Route Configuration
+const PROTECTED_ROUTES = [
+  '/cart',
+  '/checkout',
+  '/orders',
+  '/order-confirmation', // Base path
+  '/order-confirmation(.*)', //
+  '/wishlist',
+  '/profile',
+  '/password',
+  '/account',
+];
+
+const PUBLIC_ROUTES = [
+  '/',
+  '/login',
+  '/register',
+  '/forgot-password',
+  '/products',
+  '/products/(.*)', // Dynamic product details
+  '/search',
+];
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
   
-  // Protected paths that require authentication
-  const protectedPaths = [
-    '/cart',
-    '/wishlist',
-    '/checkout',
-    '/orders',
-    '/profile',
-    '/order-confirmation',
-  ];
+  // 2. Public Route Check
+  const isPublicRoute = PUBLIC_ROUTES.some(publicRoute => {
+    const regexPattern = publicRoute
+      .replace(/\//g, '\\/')
+      .replace(/\(\.\*\)/g, '.*');
+    return new RegExp(`^${regexPattern}$`).test(pathname);
+  });
 
-  // Auth pages that should be inaccessible when logged in
-  const authPaths = [
-    '/login',
-    '/signup',
-    '/forgot-password',
-    '/reset-password'
-  ];
-
-  const isProtected = protectedPaths.some(path => pathname.startsWith(path));
-  const isAuthPath = authPaths.some(path => pathname.startsWith(path));
-  const token = req.cookies.get('token')?.value;
-
-  console.log('token fe', token)
-
-  // Handle protected paths
-  if (isProtected && !token) {
-    const loginUrl = new URL('/login', req.url);
-    loginUrl.searchParams.set('next', pathname);
-    const response = NextResponse.redirect(loginUrl);
-    response.headers.set('x-middleware-cache', 'no-cache');
-    return response;
+  // 3. Skip Middleware for Public Routes
+  if (isPublicRoute || 
+      pathname.startsWith('/_next') || 
+      pathname.startsWith('/static') ||
+      pathname.startsWith('/favicon.ico')) {
+    return NextResponse.next();
   }
 
-  // Handle auth paths when already logged in
-  if (isAuthPath && token) {
-    const redirectTo = req.nextUrl.searchParams.get('next') || '/';
-    const response = NextResponse.redirect(new URL(redirectTo, req.url));
-    response.headers.set('x-middleware-cache', 'no-cache');
-    return response;
+  // 4. Authentication Check
+  const hasToken = request.cookies.has('token');
+
+  // 5. Handle Protected Routes
+  if (PROTECTED_ROUTES.some(route => pathname.startsWith(route))) {
+    if (!hasToken) {
+      return createUnauthorizedResponse(request);
+    }
   }
 
-  const response = NextResponse.next();
-  response.headers.set('x-middleware-cache', 'no-cache');
+  return NextResponse.next();
+}
+
+// 6. Unauthorized Response Handler
+function createUnauthorizedResponse(request: NextRequest): NextResponse {
+  const loginUrl = new URL('/login', request.url);
+  loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+  loginUrl.searchParams.set('error', 'unauthorized');
+  
+  const response = NextResponse.redirect(loginUrl);
+  response.cookies.delete('token');
+  
   return response;
 }
 
 export const config = {
   matcher: [
-    // Protected paths
-    '/cart/:path*',
-    '/wishlist/:path*',
-    '/checkout/:path*',
-    '/orders/:path*',
-    '/profile/:path*',
-    '/order-confirmation/:path*',
-    
-    // Auth paths
-    '/login',
-    '/signup',
-    '/forgot-password',
-    '/reset-password'
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };

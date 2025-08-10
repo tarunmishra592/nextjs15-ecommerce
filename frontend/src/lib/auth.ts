@@ -1,13 +1,13 @@
 import { startLoading, logoutSuccess, stopLoading, loginSuccess } from '@/store/slices/authSlice';
 import { AppDispatch } from '@/store/store';
-import { apiFetch } from './client-api';
+import { clientApi } from './client-api';
 
 
 
 export const verifyAuth = async (dispatch: AppDispatch) => {
   try {
     dispatch(startLoading());
-    const res: any = await apiFetch('/auth/verify', {method: 'POST', credentials: 'include' });
+    const res: any = await clientApi('/auth/verify', {method: 'POST', protected: true, credentials: 'include' });
     if (res) {
       dispatch(loginSuccess(res));
     } else {

@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/client-api";
+import { clientApi } from "@/lib/client-api";
 
 export async function submitContactForm(formData: {
     name: string
@@ -7,7 +7,7 @@ export async function submitContactForm(formData: {
     message: string
   }): Promise<{ success: boolean; message?: string }> {
     try {
-      await apiFetch<{ success: boolean }>('/contact', {
+      await clientApi<{ success: boolean }>('/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

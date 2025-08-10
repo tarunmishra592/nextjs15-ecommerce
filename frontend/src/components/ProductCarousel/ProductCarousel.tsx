@@ -7,30 +7,16 @@ import ProductCard from '../ProductCard/ProductCard'
 import { Product } from '@/types'
 import 'swiper/css'
 import 'swiper/css/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi'
-import { apiFetch } from '@/lib/client-api'
 
 interface ProductCarouselProps {
   title: string
-  tag: string
+  products: Product[]
 }
 
-export default function ProductCarousel({ title, tag }: ProductCarouselProps) {
+export default function ProductCarousel({ title, products }: ProductCarouselProps) {
   const swiperRef = useRef<any>(null)
-  const [products, setProducts] = useState<Product[]>([])
-
-
-  useEffect(() => {
-    async function getProducts(){
-      apiFetch<Product[]>(`/products?tags=${tag}&limit=8`)
-        .then((data: Product[]) => {
-          setProducts(data);
-        })
-        .catch(console.error);
-    }
-    getProducts()
-  }, [tag])
 
   return (
     <section className="max-w-6xl mx-auto p-4">

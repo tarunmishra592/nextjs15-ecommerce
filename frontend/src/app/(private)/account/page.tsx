@@ -1,12 +1,13 @@
 'use client'
 import { useEffect, useState } from 'react';
+import {useRouter} from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import toast from 'react-hot-toast';
-import { apiFetch } from '@/lib/client-api';
+import { clientApi } from '@/lib/client-api';
 
 interface User {
   _id: string;
@@ -24,11 +25,12 @@ export default function ProfilePage() {
     name: '',
     email: ''
   });
+  const router = useRouter()
 
   useEffect(() => {
     setLoading(true);
-    apiFetch<User>('/users/profile')
-      .then((data) => {
+    clientApi<User>('/users/profile', {protected: true})
+      .then((data: any) => {
         setUser(data);
         setFormData({
           name: data.name,
@@ -59,7 +61,7 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="max-w-2xl mx-auto p-6 space-y-8">
+      <div className="w-full mx-auto p-6 space-y-8">
         <Skeleton className="h-8 w-48 mb-6" />
         <div className="flex items-center space-x-4">
           <Skeleton className="h-16 w-16 rounded-full" />
@@ -86,7 +88,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-8">
+    <div className="w-full mx-auto p-6 space-y-8">
       <Card>
         <CardHeader className="border-b">
           <div className="flex justify-between items-center">
@@ -164,7 +166,7 @@ export default function ProfilePage() {
           <h2 className="text-xl font-semibold">Security</h2>
         </CardHeader>
         <CardContent className="pt-6">
-          <Button variant="outline">Change Password</Button>
+          <Button onClick={() => router.push('/account/password')} variant="outline">Change Password</Button>
         </CardContent>
       </Card>
 

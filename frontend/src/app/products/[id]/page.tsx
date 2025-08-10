@@ -1,19 +1,103 @@
+'use client'
 import ProductActions from '@/components/ProductActions/ProductActions';
 import ProductImageGallery from '@/components/ProductImageGallery/ProductImageGallery';
-import { apiFetch } from '@/lib/client-api';
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { clientApi } from '@/lib/client-api';
+import { Skeleton } from '@/components/ui/skeleton';
 
-type Props = {
-  params: Promise<{ id: string }>
-}
+export default function ProductPage() {
+  const [product, setProduct] = useState<any>(null);
+  const [productReviews, setProductReviews] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
+  const params = useParams();
+  const { id } = params;
 
-export default async function ProductPage({ params }: Props) {
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const { id } = await params;
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const product: any = await clientApi(`/products/${id}`);
+      setProduct(product);
+      const productReviews: any = await clientApi(`/products/${id}/reviews`);
+      setProductReviews(productReviews);
+    } catch (error) {
+      console.error('Error fetching product data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const product: any = await apiFetch(`/products/${id}`);
-  const productReviews: any = await apiFetch(`/products/${id}/reviews`);
+  if (loading || !product) {
+    return (
+      <div className="max-w-6xl mx-auto p-4 space-y-8">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Image Gallery Skeleton */}
+          <div className="md:w-1/2">
+            <Skeleton className="aspect-square w-full rounded-lg" />
+          </div>
 
+          {/* Product Info Skeleton */}
+          <div className="md:w-1/2 space-y-4">
+            <Skeleton className="h-8 w-3/4" />
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Skeleton key={star} className="w-5 h-5 rounded-full" />
+                ))}
+              </div>
+              <Skeleton className="h-4 w-24" />
+            </div>
+            
+            <Skeleton className="h-px w-full" />
+            
+            <Skeleton className="h-8 w-32" />
+            
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-40" />
+              <Skeleton className="h-4 w-36" />
+            </div>
+            
+            <Skeleton className="h-px w-full" />
+            
+            <Skeleton className="h-5 w-28" />
+            <Skeleton className="h-16 w-full" />
+            
+            {/* Product Actions Skeleton */}
+            <div className="space-y-4 pt-4">
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews Section Skeleton */}
+        <section className="border-t pt-8">
+          <Skeleton className="h-7 w-48 mb-6" />
+          <div className="space-y-6">
+            {[1, 2].map((i) => (
+              <div key={i} className="border-b pb-6 last:border-b-0">
+                <div className="flex items-center gap-2 mb-2">
+                  <Skeleton className="h-5 w-32" />
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Skeleton key={star} className="w-4 h-4 rounded-full" />
+                    ))}
+                  </div>
+                </div>
+                <Skeleton className="h-16 w-full mb-2" />
+                <Skeleton className="h-3 w-48" />
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-4 space-y-8">
@@ -119,9 +203,6 @@ export default async function ProductPage({ params }: Props) {
         ) : (
           <div className="bg-gray-50 p-6 rounded-lg text-center">
             <p className="text-gray-600">No reviews yet. Be the first to review this product!</p>
-            {/* <button className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
-              Write a Review
-            </button> */}
           </div>
         )}
       </section>

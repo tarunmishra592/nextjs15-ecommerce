@@ -2,6 +2,7 @@
 import { useAppSelector } from '@/store/store'
 import { selectCartItems, selectCartTotal } from '@/store/slices/cartSlice'
 import CartItem from '@/components/CartItem/CartItem'
+import { formatINR } from '@/lib/utils'
 
 export default function OrderSummary() {
   const cartItems = useAppSelector(selectCartItems)
@@ -22,7 +23,7 @@ export default function OrderSummary() {
       <div className="border-t pt-4">
         <div className="flex justify-between font-bold text-lg">
           <span>Total</span>
-          <span>${total.toFixed(2)}</span>
+          <span>{formatINR(total)}</span>
         </div>
       </div>
     </div>

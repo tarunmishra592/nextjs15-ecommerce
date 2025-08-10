@@ -5,6 +5,7 @@ import { Product } from '@/types'
 import { useAppDispatch } from '@/store/hooks'
 import { FiTrash2, FiPlus, FiMinus } from 'react-icons/fi'
 import { removeCartItem, updateCartQuantity } from '@/services/cartService'
+import { formatINR } from '@/lib/utils'
 
 export default function CartItem({ product, quantity }: { product: Product; quantity: number }) {
   const dispatch = useAppDispatch()
@@ -40,7 +41,9 @@ export default function CartItem({ product, quantity }: { product: Product; quan
       
       <div className="flex-1">
         <h4 className="font-semibold text-gray-800">{product.name}</h4>
-        <p className="text-gray-600">${product?.price?.toFixed(2)}</p>
+        <p className="text-gray-600">
+          {formatINR(product?.price)}
+        </p>
         
         <div className="flex items-center mt-3 gap-4">
           <div className="flex items-center border border-gray-300 rounded-md">
@@ -70,7 +73,7 @@ export default function CartItem({ product, quantity }: { product: Product; quan
       </div>
       
       <div className="text-right font-medium">
-        ${(product.price * quantity).toFixed(2)}
+        {formatINR(product.price * quantity)}
       </div>
     </div>
   )

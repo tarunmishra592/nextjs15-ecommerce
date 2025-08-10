@@ -1,5 +1,6 @@
 'use client'
-import { apiFetch } from "@/lib/client-api";
+import { clientApi } from "@/lib/client-api";
+import { formatINR } from "@/lib/utils";
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,7 +18,7 @@ export default function ConfirmationPage() {
       try {
         const orderId = params.get('orderId');
         if (orderId) {
-          const data = await apiFetch<any>(`/orders/${orderId}`);
+          const data = await clientApi<any>(`/orders/${orderId}`, {protected: true});
           setOrder(data);
         }
       } catch (error) {
@@ -65,7 +66,7 @@ export default function ConfirmationPage() {
                 <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(order.status)}`}>{order.status.replace('_', ' ')}</span>
               </p>
               <p><span className="font-medium">Payment Method:</span> {order.paymentMethod}</p>
-              <p><span className="font-medium">Total Paid:</span> ₹{(order.total / 100).toFixed(2)}</p>
+              <p><span className="font-medium">Total Paid:</span> {formatINR(order.total)}</p>
             </div>
           </div>
 
@@ -103,10 +104,14 @@ export default function ConfirmationPage() {
                 <div className="ml-4 flex-1">
                   <h3 className="font-medium">{item.product?.name || 'Product'}</h3>
                   <p className="text-gray-600">Qty: {item.quantity}</p>
-                  <p className="text-gray-600">₹{(item.product.price / 100).toFixed(2)} each</p>
+                  <p className="text-gray-600">
+                    {formatINR(item.product.price)} each
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-medium">₹{(item.product.price * item.quantity / 100).toFixed(2)}</p>
+                  <p className="font-medium">
+                  {formatINR(item.product.price * item.quantity)}
+                  </p>
                 </div>
               </div>
             ))}
@@ -114,7 +119,7 @@ export default function ConfirmationPage() {
         </div>
 
         <div className="mt-8 flex justify-end">
-          <Link href="/orders" className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+          <Link href="/account/orders" className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
             View All Orders
           </Link>
         </div>

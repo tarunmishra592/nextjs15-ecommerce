@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { signupSchema, type SignupInput } from '@/lib/zod'
 import Image from 'next/image'
-import { apiFetch } from '@/lib/client-api'
+import { clientApi } from '@/lib/client-api'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -25,7 +25,7 @@ export default function RegisterPage() {
     setServerError(null)
     
     try {
-      await apiFetch('/auth/signup', {
+      await clientApi('/auth/signup', {
         method: 'POST',
         data: data
       })

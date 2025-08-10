@@ -3,34 +3,115 @@
 
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
+import { useRouter, useSearchParams } from 'next/navigation';
 import { RootState, useAppSelector } from '@/store/store'
 import { FiShoppingCart, FiSearch, FiMenu, FiX } from 'react-icons/fi'
 import { WishlistIcon } from '../WishlistIcon/WishlistIcon'
-import { useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useTransition } from 'react'
 import CartPopover from '../CartPopover/CartPopover'
 import { selectUser } from '@/store/slices/authSlice'
-import { apiFetch } from '@/lib/client-api'
+import { clientApi } from '@/lib/client-api'
+import SearchModal from './SearchModal'
+import { Product } from '@/types';
+
+function debounce<T extends (...args: any[]) => void>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout
+  return function executedFunction(...args: Parameters<T>) {
+    const later = () => {
+      clearTimeout(timeout)
+      func(...args)
+    }
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+  }
+}
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isAccountOpen, setIsAccountOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Product[]>([])
+  const [isPending, startTransition] = useTransition()
+  
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
   const user = useAppSelector(selectUser)
   const cartItems = useSelector((state: RootState) => state.cart.items)
   const cartLen = useSelector((state: RootState) => state.cart.items.length)
 
 
+  // Handle initial search from URL
+  useEffect(() => {
+    if (searchParams.get('q')) {
+      setSearchQuery(searchParams.get('q')!)
+      handleSearch(searchParams.get('q')!)
+    }
+  }, []) // Empty dependency array to run only once on mount
 
   const toggleAccountMenu = () => {
     setIsAccountOpen(!isAccountOpen)
     setIsMenuOpen(false)
   }
 
+  // Search products function
+  const searchProducts = async (query: string) => {
+    if (!query.trim()) return []
+    
+    try {
+      const response = await clientApi(`/products/search?query=${query}`)
+      return response
+    } catch (error) {
+      console.error('Search failed:', error)
+      return []
+    }
+  }
+
+  // Handle search with transition
+  const handleSearch = useCallback((query: string) => {
+    startTransition(async () => {
+      const results = await searchProducts(query)
+      setSearchResults(results)
+    })
+  }, [])
+
+  // Create debounced search function with useRef to maintain it across renders
+  const debouncedSearchRef = useRef(
+    debounce((query: string) => {
+      if (query.trim()) {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set('q', query)
+        router.replace(`/?${params.toString()}`, { scroll: false })
+        handleSearch(query)
+      } else {
+        setSearchResults([])
+      }
+    }, 300)
+  )
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value
+    setSearchQuery(query)
+    debouncedSearchRef.current(query)
+  }
+
+  const closeSearch = () => {
+    setIsSearchOpen(false)
+    setSearchQuery('')
+    setSearchResults([])
+  }
+
   const handleLogout = async() => {
     try {
       // 1. Call backend logout endpoint
-      await apiFetch('/auth/logout', {
+      await clientApi('/auth/logout', {
         method: 'POST',
+        protected: true,
         credentials: 'include', // Necessary for cookies
       });
   
@@ -63,9 +144,25 @@ export default function Header() {
 
         {/* Right Side Icons */}
         <div className="flex items-center space-x-4">
-          <button className="p-2 hover:text-green-600 transition">
-            <FiSearch className="text-xl" />
-          </button>
+          <div className="relative">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 hover:text-green-600 transition"
+            >
+              <FiSearch className="text-xl" />
+            </button>
+
+            {/* Search Modal */}
+            {isSearchOpen && (
+              <SearchModal 
+                searchResults={searchResults}
+                isPending={isPending}
+                closeSearch={closeSearch}
+                setSearchQuery={setSearchQuery} 
+                searchQuery={searchQuery} 
+                handleSearchChange={handleSearchChange} />
+            )}
+          </div>
 
            {/* Wishlist Icon */}
            <WishlistIcon/>
@@ -130,13 +227,6 @@ export default function Header() {
                       onClick={() => setIsAccountOpen(false)}
                     >
                       My Account
-                    </Link>
-                    <Link
-                      href="/orders"
-                      className="block px-4 py-2 text-sm hover:bg-green-50"
-                      onClick={() => setIsAccountOpen(false)}
-                    >
-                      My Orders
                     </Link>
                     <button
                       onClick={handleLogout}

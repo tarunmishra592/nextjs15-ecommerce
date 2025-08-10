@@ -5,7 +5,9 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { addCartItem } from '@/services/cartService';
 import useAuth from '@/hooks/useAuth';
-import { useAppDispatch } from '@/store/store';
+import { RootState, useAppDispatch } from '@/store/store';
+import { addWishlistItem, removeWishlistItem } from '@/services/wishlistService';
+import { useSelector } from 'react-redux';
 
 interface ProductActionsProps {
   productId: string;
@@ -17,6 +19,8 @@ export default function ProductActions({ productId, price, stock }: ProductActio
   const dispatch = useAppDispatch()
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.items); 
+  const isInWishlist = wishlistItems.some(item => item._id === productId);
   const { isAuthenticated } = useAuth()
 
 
@@ -42,6 +46,31 @@ export default function ProductActions({ productId, price, stock }: ProductActio
     } catch (error) {
       toast.error('An error occurred');
       console.error('Add to cart error:', error);
+    }
+  };
+
+
+  const handleWishlist = async () => {
+    if (!isAuthenticated) {
+      toast.error('Please login to manage your wishlist');
+      return;
+    }
+  
+    console.log('Current isInWishlist:', isInWishlist);
+    
+    try {
+      if (isInWishlist) {
+        console.log('Attempting to remove from wishlist');
+        dispatch(removeWishlistItem(productId));
+        toast.error('Removed from wishlist!');
+      } else {
+        console.log('Attempting to add to wishlist');
+        dispatch(addWishlistItem(productId));
+        toast.success('Added to wishlist!');
+      }
+    } catch (error) {
+      console.error('Wishlist operation failed:', error);
+      toast.error('Failed to update wishlist');
     }
   };
 
@@ -97,13 +126,14 @@ export default function ProductActions({ productId, price, stock }: ProductActio
             </button>
             <button
             disabled={stock === 0}
+            onClick={handleWishlist}
             className={`w-full py-3 px-6 rounded-md font-medium shadow-sm transition-colors ${
                 stock === 0
                 ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-orange-400 hover:bg-orange-500 text-black'
+                : 'bg-green-400 hover:bg-green-500 text-black'
             }`}
             >
-            Buy Now ₹{(price * quantity).toFixed(2)}
+            Add to Wishlist
             </button>
         </div>
       </div>

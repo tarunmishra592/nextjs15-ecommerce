@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/client-api";
+import { clientApi } from "@/lib/client-api";
 import { fetchCartSuccess, operationFailed, removeCartItemSuccess, startLoading, updateCartQuantitySuccess } from "@/store/slices/cartSlice";
 import { AppDispatch } from "@/store/store";
 import { ApiErrorResponse, CartItem } from "@/types";
@@ -7,7 +7,7 @@ import { ApiErrorResponse, CartItem } from "@/types";
 export const fetchCart = () => async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<CartItem[]>('/cart', { method: 'GET' });
+      const data: any = await clientApi<CartItem[]>('/cart', { method: 'GET', protected: true });
       dispatch(fetchCartSuccess(data));
     } catch (err: any) {
       dispatch(operationFailed({
@@ -19,9 +19,10 @@ export const fetchCart = () => async (dispatch: AppDispatch) => {
 export const updateCartQuantity = (productId: string, quantity: number) => async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<CartItem[]>(`/cart/${productId}`, {
+      const data: any = await clientApi<CartItem[]>(`/cart/${productId}`, {
         method: 'PATCH',
         data: { quantity },
+        protected: true
       });
       dispatch(updateCartQuantitySuccess(data));
     } catch (err: any) {
@@ -36,9 +37,10 @@ export const addCartItem = (productId: string, quantity: number = 1) => {
   return async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<CartItem>('/cart', {
+      const data = await clientApi<CartItem>('/cart', {
         method: 'POST',
         data: { productId, quantity },
+        protected: true
       });
       
       // Dispatch success action with proper type
@@ -60,7 +62,7 @@ export const addCartItem = (productId: string, quantity: number = 1) => {
 export const removeCartItem = (productId: string) => async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      await apiFetch<void>(`/cart/${productId}`, { method: 'DELETE' });
+      await clientApi<void>(`/cart/${productId}`, { method: 'DELETE', protected: true });
       dispatch(removeCartItemSuccess({ productId }));
     } catch (err: any) {
       const errorPayload: ApiErrorResponse = err?.status

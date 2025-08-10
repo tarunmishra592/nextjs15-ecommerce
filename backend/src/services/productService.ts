@@ -105,3 +105,17 @@ export async function deleteProduct(id: string) {
   if (!res) throw Object.assign(new Error('Product not found'), { statusCode: 404 });
   return res;
 }
+
+
+export const searchProducts = async (query: string) => {
+  const searchRegex = new RegExp(query, 'i'); // case-insensitive
+
+  return await Product.find({
+    $or: [
+      { name: searchRegex },
+      { description: searchRegex },
+      { category: searchRegex }
+    ]
+  })
+  .select('name price images description'); // include image in response
+};

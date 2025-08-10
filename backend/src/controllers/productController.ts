@@ -58,3 +58,21 @@ export const deleteProduct = async (req: Request, res: Response, next: NextFunct
     next(err);
   }
 };
+
+
+export const searchProducts = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    console.log('----------------')
+    console.log(req.query)
+    const query = req.query.query as string;
+    
+    if (!query) {
+      return res.status(400).json({ message: "Search query is required" });
+    }
+
+    const products = await productService.searchProducts(query);
+    res.json(products);
+  } catch (error) {
+    next(error);
+  }
+};

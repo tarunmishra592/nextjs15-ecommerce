@@ -1,29 +1,55 @@
-// lib/client-api.ts
-'use client'; // Mark as client component
+'use client';
 
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-export const clientApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api',
-  withCredentials: true, // For automatic cookie handling
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
+// Create base API instance
+const createApiClient = (baseConfig: AxiosRequestConfig): AxiosInstance => {
+  const instance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:4000/api',
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    ...baseConfig,
+  });
+
+  return instance;
+};
+
+// 1. Protected API client (with credentials and auth handling)
+export const protectedApi = createApiClient({
+  withCredentials: true,
 });
 
-
-clientApi.interceptors.response.use(
-  (response: AxiosResponse) => response,
+// Add auth interceptor for protected endpoints
+protectedApi.interceptors.response.use(
+  (response) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      // window.location.href = '/login';
+      // Clear cookies and redirect on 401
+      document.cookie = 'token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      document.cookie = 'refreshToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      window.location.href = `/login?error=session_expired&redirect=${encodeURIComponent(window.location.pathname)}`;
     }
-    throw error;
+    return Promise.reject(error);
   }
 );
 
-export const apiFetch = async <T = unknown>(url: string, config?: any): Promise<T> => {
-  const response = await clientApi(url, config);
-  return response.data;
+// 2. Public API client (no credentials)
+export const publicApi = createApiClient({});
+
+// Unified fetch function
+export const clientApi = async <T = any>(
+  url: string,
+  config?: AxiosRequestConfig & { protected?: boolean }
+): Promise<T> => {
+  const client = config?.protected ? protectedApi : publicApi;
+  const { protected: _, ...requestConfig } = config || {};
+
+  try {
+    const response = await client(url, requestConfig);
+    return response.data;
+  } catch (error) {
+    throw error; // Error handling is done in interceptors
+  }
 };

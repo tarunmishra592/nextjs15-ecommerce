@@ -48,7 +48,7 @@ export default function ProductImageGallery({ images, productName }: ProductImag
               alt={productName}
               fill
               className={`object-contain p-4 transition-transform duration-300 ${
-                isZoomed ? 'scale-150 cursor-zoom-out' : 'cursor-zoom-in'
+                isZoomed ? 'scale-160 cursor-zoom-out' : 'cursor-zoom-in'
               }`}
               sizes="(max-width: 768px) 100vw, 50vw"
             />

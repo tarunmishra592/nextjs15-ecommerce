@@ -8,7 +8,7 @@ import { selectShippingAddress } from '@/store/slices/checkoutSlice';
 import { selectCartItems, selectCartTotal } from '@/store/slices/cartSlice';
 import { Order, RazorpayOrder } from '@/types';
 import { selectUser } from '@/store/slices/authSlice';
-import { apiFetch } from '@/lib/client-api';
+import { clientApi } from '@/lib/client-api';
 import { fetchCart } from '@/services/cartService';
 
 type PaymentMethod = 'razorpay' | 'cod' | 'wallet';
@@ -59,14 +59,16 @@ export const PaymentMethods = () => {
           amount: cartTotal
         };
   
-        const order = await apiFetch<Order>('/orders', {
+        const order: any = await clientApi<Order>('/orders', {
           method: 'POST',
-          data: orderData
+          data: orderData,
+          protected: true
         });
   
         // 2. Then create Razorpay payment for this order
-        const paymentOrder = await apiFetch<RazorpayOrder>('/payment', {
+        const paymentOrder: any = await clientApi<RazorpayOrder>('/payment', {
           method: 'POST',
+          protected: true,
           data: { 
             amount: cartTotal * 100,
             orderId: order._id // Pass your internal order ID
@@ -80,14 +82,15 @@ export const PaymentMethods = () => {
           key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID!,
           amount: paymentOrder.amount,
           currency: paymentOrder.currency,
-          name: 'Your Store Name',
+          name: 'ShopEase',
           description: `Order #${order._id}`,
           order_id: paymentOrder.id,
           handler: async (response: any) => {
             try {
               // Verify payment and update order status
-              await apiFetch(`/payment/verify`, {
+              await clientApi(`/payment/verify`, {
                 method: 'POST',
+                protected: true,
                 data: {
                   razorpay_order_id: response.razorpay_order_id,
                   razorpay_payment_id: response.razorpay_payment_id,
@@ -97,7 +100,7 @@ export const PaymentMethods = () => {
               });
 
               // Clear Cart
-              await apiFetch(`/cart/empty`, { method: 'DELETE'})
+              await clientApi(`/cart/empty`, { method: 'DELETE', protected: true})
               dispatch(fetchCart())
               // Redirect to confirmation page
               router.push(`/order-confirmation?orderId=${order._id}`);

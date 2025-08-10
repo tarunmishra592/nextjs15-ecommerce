@@ -5,6 +5,7 @@ import {
   getProduct,
   updateProduct,
   deleteProduct,
+  searchProducts
 } from '../controllers/productController';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { validate } from '../middlewares/validate';
@@ -16,22 +17,17 @@ const router = Router();
 
 // Public endpoints
 router.get('/', listProducts);
+router.get('/search', searchProducts);
 router.get('/:id', getProduct);
-
-
-// POST /api/products/:productId/reviews
-router.post('/:id/reviews', validate(createReviewSchema), addReview);
-
-// GET /api/products/:productId/reviews
 router.get('/:id/reviews', listReviews);
 
-// DELETE /api/products/:productId/reviews/:id
-router.delete('/reviews/:id', validate(reviewIdParamSchema), deleteReview);
 
-// Admin-only endpoints (for teaching, user with isAdmin flag)
 router.use(authMiddleware);
 router.post('/', validate(createProductSchema), createProduct);
+router.post('/:id/reviews', validate(createReviewSchema), addReview);
 router.put('/:id', validate(updateProductSchema), updateProduct);
 router.delete('/:id', deleteProduct);
+router.delete('/reviews/:id', validate(reviewIdParamSchema), deleteReview);
+
 
 export default router;

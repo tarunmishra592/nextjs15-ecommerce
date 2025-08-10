@@ -63,7 +63,7 @@ export async function verifyPaymentSignature(
       throw new Error('Order not found');
     }
 
-    await sendOrderConfirmationEmail(order?.user?.email, order);
+    // await sendOrderConfirmationEmail(order?.user?.email, order);
 
     await session.commitTransaction();
     return order;

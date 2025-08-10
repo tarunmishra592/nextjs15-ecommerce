@@ -1,4 +1,4 @@
-import { apiFetch } from "@/lib/client-api";
+import { clientApi } from "@/lib/client-api";
 import { addWishlistItemSuccess, fetchWishlistSuccess, operationFailed, removeWishlistItemSuccess, startLoading } from "@/store/slices/wishlistSlice";
 import { AppDispatch } from "@/store/store";
 import { ApiErrorResponse, WishlistItems } from "@/types";
@@ -7,7 +7,7 @@ import { ApiErrorResponse, WishlistItems } from "@/types";
 export const fetchWishlist = () => async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const data = await apiFetch<any[]>('/wishlist', { method: 'GET' });
+      const data: any = await clientApi<any[]>('/wishlist', { method: 'GET', protected: true });
       dispatch(fetchWishlistSuccess(data));
     } catch (err: any) {
       const errorPayload: ApiErrorResponse = err?.status
@@ -22,8 +22,9 @@ export const fetchWishlist = () => async (dispatch: AppDispatch) => {
       dispatch(startLoading());
       
       // API returns the complete updated wishlist
-      const updatedWishlist = await apiFetch<any[]>(`/wishlist/${productId}`, {
-        method: 'POST'
+      const updatedWishlist: any = await clientApi<any[]>(`/wishlist/${productId}`, {
+        method: 'POST',
+        protected: true
       });
   
       dispatch(addWishlistItemSuccess(updatedWishlist));
@@ -41,7 +42,7 @@ export const removeWishlistItem = (productId: string) => async (dispatch: AppDis
     try {
       dispatch(startLoading());
       
-      const updatedWishlist = await apiFetch<WishlistItems[]>(`/wishlist/${productId}`, { method: 'DELETE' });
+      const updatedWishlist: any = await clientApi<WishlistItems[]>(`/wishlist/${productId}`, { method: 'DELETE', protected: true });
       
       dispatch(removeWishlistItemSuccess(updatedWishlist));
       

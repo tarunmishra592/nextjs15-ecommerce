@@ -6,11 +6,11 @@ export default function PaymentForm() {
 
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div className="col-span-7">
-        <PaymentMethods />
+      <div className="col-span-9">
+        <OrderSummary />
       </div>
       <div className="col-span-3">
-        <OrderSummary />
+        <PaymentMethods />
       </div>
     </div>
   )

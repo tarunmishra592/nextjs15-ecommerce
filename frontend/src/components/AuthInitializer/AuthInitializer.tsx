@@ -1,4 +1,3 @@
-// components/AuthInitializer.tsx
 'use client';
 
 import { useEffect } from 'react';
@@ -13,18 +12,20 @@ export default function AuthInitializer() {
 
   useEffect(() => {
     const initializeAuth = async () => {
-      const result = await verifyAuth(dispatch);
-      
-      if (result?.token) {
-        await Promise.all([
-          dispatch(fetchUser()),
-          dispatch(fetchCart()),
-          dispatch(fetchWishlist())
-        ]);
-      }
+        try{
+          const result = await verifyAuth(dispatch);        
+          if (result?.token) {
+            await Promise.all([
+              dispatch(fetchUser()),
+              dispatch(fetchCart()),
+              dispatch(fetchWishlist())
+            ]);
+          }
+        }catch(err){
+          console.log('token err', err)
+        }
     };
-    
-    initializeAuth();
+    initializeAuth()
   }, [dispatch]);
 
   return null; // This component doesn't render anything

@@ -10,7 +10,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Check, Plus } from 'lucide-react'
 import { useSelector } from 'react-redux'
-import { apiFetch } from '@/lib/client-api'
+import { clientApi } from '@/lib/client-api'
 
 const addressSchema = z.object({
   firstName: z.string().min(1, 'Required').max(50, 'Too long'),
@@ -53,7 +53,7 @@ export default function AddressForm() {
     const fetchAddresses = async () => {
       if (user) {
         try {
-          const data: any = await apiFetch('/users/addresses')
+          const data: any = await clientApi('/users/addresses', {protected: true})
           setAddresses(data)
           const defaultAddr = data.find((addr: any) => addr.saveAsDefault)
           if (defaultAddr) {
@@ -95,9 +95,10 @@ export default function AddressForm() {
       let savedAddress: any = values
       
       if (user) {
-        const response: any = await apiFetch('/users/addresses', {
+        const response: any = await clientApi('/users/addresses', {
           method: 'POST',
-          data: values
+          data: values,
+          protected: true
         })
         savedAddress = response
         setAddresses(prev => [...prev, response])

@@ -9,14 +9,15 @@ import type {
   RazorpayOrder, 
   PaymentVerificationPayload 
 } from "@/types";
-import { apiFetch } from "@/lib/client-api";
+import { clientApi } from "@/lib/client-api";
 
 export const initiatePayment = (amount: number) => 
   async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const order = await apiFetch<RazorpayOrder>('/payment', {
+      const order: any = await clientApi<RazorpayOrder>('/payment', {
         method: 'POST',
+        protected: true,
         data: { amount }
       });
       dispatch(paymentInitiated(order));
@@ -33,8 +34,9 @@ export const verifyPayment = (payload: PaymentVerificationPayload) =>
   async (dispatch: AppDispatch) => {
     try {
       dispatch(startLoading());
-      const result: any = await apiFetch('/payment/verify', {
+      const result: any = await clientApi('/payment/verify', {
         method: 'POST',
+        protected: true,
         data: payload
       });
       dispatch(paymentVerified(result));
