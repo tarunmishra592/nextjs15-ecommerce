@@ -70,7 +70,7 @@ export const PaymentMethods = () => {
           method: 'POST',
           protected: true,
           data: { 
-            amount: cartTotal * 100,
+            amount: cartTotal,
             orderId: order._id // Pass your internal order ID
           }
         });

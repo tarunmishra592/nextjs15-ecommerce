@@ -11,6 +11,7 @@ import { fetchCart } from '@/services/cartService'
 import { selectCartItems } from '@/store/slices/cartSlice'
 import { resetCheckout, setCheckoutStep } from '@/store/slices/checkoutSlice'
 import { useAppDispatch } from '@/store/store'
+import { formatINR } from '@/lib/utils'
 
 export default function CartPage() {
   const dispatch = useAppDispatch();
@@ -80,31 +81,31 @@ export default function CartPage() {
           <div className="space-y-3">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>{formatINR(subtotal)}</span>
             </div>
             
             {discount > 0 && (
               <div className="flex justify-between text-green-600">
                 <span>Discount</span>
-                <span>-${discount.toFixed(2)}</span>
+                <span>-{formatINR(discount)}</span>
               </div>
             )}
             
             <div className="flex justify-between">
               <span>Shipping</span>
-              <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+              <span>{shipping === 0 ? 'FREE' : `${formatINR(shipping)}`}</span>
             </div>
             
             <div className="flex justify-between">
               <span>Tax (10%)</span>
-              <span>${tax.toFixed(2)}</span>
+              <span>{formatINR(tax)}</span>
             </div>
             
             <div className="border-t border-gray-200 my-3"></div>
             
             <div className="flex justify-between font-bold text-lg">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>{formatINR(total)}</span>
             </div>
           </div>
 
@@ -113,7 +114,7 @@ export default function CartPage() {
           </button>
           
           <p className="text-sm text-gray-500 mt-4 text-center">
-            Free shipping on orders over $100
+            Free shipping on orders over {formatINR(100)}
           </p>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import path from 'path';
 import ejs from 'ejs';
-import { transporter } from '../utils/email'
+import { transporter } from '../utils/email';
 
 
 
@@ -22,7 +22,7 @@ export const sendOrderConfirmationEmail = async (
 
     // Email options with TypeScript typing
     const mailOptions: nodemailer.SendMailOptions = {
-      from: `"Your Store" <${process.env.EMAIL_USER}>`,
+      from: `"ShopEase" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: `Order Confirmation #${order._id}`,
       html,

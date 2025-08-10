@@ -56,14 +56,14 @@ export async function verifyPaymentSignature(
         }
       },
       { new: true, session }
-    ).populate('items.product').populate('user', 'email');;
+    ).populate('items.product').populate('user', 'email').populate('shippingAddress');;
 
 
     if (!order) {
       throw new Error('Order not found');
     }
 
-    // await sendOrderConfirmationEmail(order?.user?.email, order);
+    await sendOrderConfirmationEmail(order?.user?.email, order);
 
     await session.commitTransaction();
     return order;

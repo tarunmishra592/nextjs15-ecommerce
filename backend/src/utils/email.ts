@@ -1,20 +1,6 @@
 import nodemailer from 'nodemailer';
 import { generateAccessToken } from './token';
 
-async function getNewAccessToken() {
-  const response = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      refresh_token: process.env.GOOGLE_REFRESH_TOKEN!,
-      client_id: process.env.GOOGLE_CLIENT_ID!,
-      client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-      grant_type: 'refresh_token',
-    }),
-  });
-  const data = await response.json();
-  return data.access_token;
-}
 
 export const sendPasswordResetEmail = async (email: string, userId: string) => {
   const token = generateAccessToken({ sub: userId.toString() });
@@ -144,7 +130,7 @@ export const sendPasswordResetEmail = async (email: string, userId: string) => {
 };
 
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: process.env.SMTP_PORT,
   secure: false, // true for 465 (SSL)
