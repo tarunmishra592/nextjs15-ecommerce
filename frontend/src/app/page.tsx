@@ -1,31 +1,87 @@
 // app/page.tsx
+'use client'
 
 import HeroSlider from '@/components/HeroSlider/HeroSlider'
 import ProductCarousel from '@/components/ProductCarousel/ProductCarousel'
-import { serverFetch } from '@/lib/server-api';
 import { Product } from '@/types';
+import { useEffect, useState } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { clientApi } from '@/lib/client-api';
 
-export default async function HomePage() {
+export default function HomePage() {
+  const [featuredProducts, setFeaturedProducts] = useState<Product[] | null>(null);
+  const [newArrivals, setNewArrivals] = useState<Product[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [featured, newProducts] = await Promise.all([
+          clientApi<Product[]>(`/products?tags=featured&limit=8`),
+          clientApi<Product[]>(`/products?tags=new&limit=8`)
+        ]);
+        setFeaturedProducts(featured);
+        setNewArrivals(newProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const [featuredProducts, newArrivals] = await Promise.all([
-    serverFetch<Product[]>(`/products?tags=featured&limit=8`),
-    serverFetch<Product[]>(`/products?tags=new&limit=8`)
-  ]);
+    fetchData();
+  }, []);
 
   return (
-    <div className="space-y-16 pb-8"> {/* Added bottom padding */}
-      <HeroSlider />
-      
-      <ProductCarousel 
-        title="Featured Products" 
-        products={featuredProducts} 
-      />
+    <div className="space-y-16 pb-8">
+      {/* Hero Slider with Skeleton */}
+      {isLoading ? (
+        <div className="relative w-full aspect-[16/9]">
+          <Skeleton className="w-full h-full rounded-lg" />
+        </div>
+      ) : (
+        <HeroSlider />
+      )}
 
-      <ProductCarousel 
-        title="New Arrivals" 
-        products={newArrivals}
-      />
+      {/* Featured Products Carousel with Skeleton */}
+      <div className="space-y-4">
+        {isLoading ? (
+          <div className="flex gap-4 overflow-hidden px-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex-none w-[45%] sm:w-[30%] md:w-[22%]">
+                <Skeleton className="aspect-square rounded-lg" />
+                <Skeleton className="h-4 w-3/4 mt-2" />
+                <Skeleton className="h-4 w-1/2 mt-1" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <ProductCarousel 
+            title="Feature Products" // Title is already rendered above
+            products={featuredProducts || []} 
+          />
+        )}
+      </div>
+
+      {/* New Arrivals Carousel with Skeleton */}
+      <div className="space-y-4">
+        {isLoading ? (
+          <div className="flex gap-4 overflow-hidden px-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="flex-none w-[45%] sm:w-[30%] md:w-[22%]">
+                <Skeleton className="aspect-square rounded-lg" />
+                <Skeleton className="h-4 w-3/4 mt-2" />
+                <Skeleton className="h-4 w-1/2 mt-1" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <ProductCarousel 
+            title="New Arrivals" // Title is already rendered above
+            products={newArrivals || []}
+          />
+        )}
+      </div>
     </div>
   )
 }
