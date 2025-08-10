@@ -41,7 +41,7 @@ export const publicApi = createApiClient({});
 // Unified fetch function
 export const clientApi = async <T = any>(
   url: string,
-  config?: AxiosRequestConfig & { protected?: boolean }
+  config?: any & { protected?: boolean }
 ): Promise<T> => {
   const client = config?.protected ? protectedApi : publicApi;
   const { protected: _, ...requestConfig } = config || {};
