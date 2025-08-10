@@ -7,7 +7,7 @@ import { clientApi } from '@/lib/client-api'
 
 // Validation schemas
 const emailSchema = z.object({
-  email: z.string().email('Invalid email address').min(1, 'Email is required'),
+  email: z.email('Invalid email address').min(1, 'Email is required'),
 })
 
 const passwordSchema = z.object({
