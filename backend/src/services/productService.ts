@@ -18,74 +18,56 @@ interface ProductFilter {
   sort?: string;
 }
 
-export async function listProducts(filter: ProductFilter) {
+export async function listProducts(filter: ProductFilter & { page?: number; limit?: number }) {
   const query: any = {};
-  
-  // Handle multiple categories
-  if (filter.categories && filter.categories.length > 0) {
-    query.category = { $in: filter.categories };
-  }
-  
-  // Price range
+
+  if (filter.categories?.length) query.category = { $in: filter.categories };
+
   if (filter.minPrice != null || filter.maxPrice != null) {
     query.price = {};
     if (filter.minPrice != null) query.price.$gte = filter.minPrice;
     if (filter.maxPrice != null) query.price.$lte = filter.maxPrice;
   }
-  
-  // Text search
-  if (filter.search) {
-    query.$text = { $search: filter.search };
-  }
-  
-  // Tags (must contain all selected tags)
-  if (filter.tags && filter.tags.length > 0) {
-    query.tags = { $all: filter.tags };
-  }
-  
-  // Colors
-  if (filter.colors && filter.colors.length > 0) {
-    query['variants.colors'] = { $in: filter.colors };
-  }
-  
-  // Sizes
-  if (filter.sizes && filter.sizes.length > 0) {
-    query['variants.sizes'] = { $in: filter.sizes };
-  }
-  
-  // Minimum rating
-  if (filter.rating) {
-    query.rating = { $gte: filter.rating };
-  }
-  
-  // Minimum discount
-  if (filter.discount) {
-    query.discountPercentage = { $gte: filter.discount };
-  }
 
-  // Sorting
-  let sortOptions = {};
+  if (filter.search) query.$text = { $search: filter.search };
+
+  if (filter.tags?.length) query.tags = { $all: filter.tags };
+
+  if (filter.colors?.length) query['variants.colors'] = { $in: filter.colors };
+
+  if (filter.sizes?.length) query['variants.sizes'] = { $in: filter.sizes };
+
+  if (filter.rating) query.rating = { $gte: filter.rating };
+
+  if (filter.discount) query.discountPercentage = { $gte: filter.discount };
+
+  let sortOptions: any = {};
   switch (filter.sort) {
-    case 'price-asc':
-      sortOptions = { price: 1 };
-      break;
-    case 'price-desc':
-      sortOptions = { price: -1 };
-      break;
-    case 'newest':
-      sortOptions = { createdAt: -1 };
-      break;
-    case 'rating':
-      sortOptions = { rating: -1 };
-      break;
-    case 'featured':
-      sortOptions = { isFeatured: -1, createdAt: -1 };
-      break;
-    default:
-      sortOptions = { createdAt: -1 };
+    case 'price-asc': sortOptions = { price: 1 }; break;
+    case 'price-desc': sortOptions = { price: -1 }; break;
+    case 'newest': sortOptions = { createdAt: -1 }; break;
+    case 'rating': sortOptions = { rating: -1 }; break;
+    case 'featured': sortOptions = { isFeatured: -1, createdAt: -1 }; break;
+    default: sortOptions = { createdAt: -1 };
   }
 
-  return await Product.find(query).sort(sortOptions);
+  const page = filter.page || 1;
+  const limit = filter.limit || 10;
+  const skip = (page - 1) * limit;
+
+  const [products, total] = await Promise.all([
+    Product.find(query)
+      .sort(sortOptions)
+      .skip(skip)
+      .limit(limit),
+    Product.countDocuments(query)
+  ]);
+
+  return {
+    products,
+    total,
+    totalPages: Math.ceil(total / limit)
+  };
 }
 
 export async function getProductById(id: string) {

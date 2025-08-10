@@ -4,18 +4,23 @@ import { Product } from '@/types'
 import ProductCard from '@/components/ProductCard/ProductCard'
 import { FiChevronDown } from 'react-icons/fi'
 import { useSearchParams, useRouter } from 'next/navigation'
-
+import { Skeleton } from '@/components/ui/skeleton'
 
 type QueryParams = Record<string, string>;
 
 export interface ProductListingProps {
   products: Product[];
   searchParams: QueryParams;
+  isFetchingMore: boolean;
+  sentinelRef: React.RefObject<HTMLDivElement>;
 }
 
-export default function ProductListing({ products, searchParams }: ProductListingProps) {
-
-
+export default function ProductListing({ 
+  products, 
+  searchParams, 
+  isFetchingMore,
+  sentinelRef
+}: ProductListingProps) {
   const router = useRouter()
   const params = useSearchParams()
 
@@ -54,11 +59,32 @@ export default function ProductListing({ products, searchParams }: ProductListin
 
       {/* Products Grid */}
       {products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {products.map((product, index) => (
+              <ProductCard 
+                key={`${product._id}-${product.category || Math.random().toString(36).substring(2, 9)}-${index}`} 
+                product={product} />
+            ))}
+          </div>
+          
+          {/* Loading Skeletons when fetching more */}
+          {isFetchingMore && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={`skeleton-${i}`} className="space-y-3">
+                  <Skeleton className="aspect-square rounded-lg" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-4 w-1/3" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Sentinel element for infinite scroll */}
+          <div ref={sentinelRef} className="h-1 w-full" />
+        </>
       ) : (
         <div className="text-center py-12 bg-white rounded-lg border border-gray-200 shadow-sm">
           <p className="text-lg font-medium text-gray-900">No products found</p>

@@ -22,11 +22,21 @@ export const listProducts = async (req: Request, res: Response, next: NextFuncti
       sizes: req.query.sizes ? (req.query.sizes as string).split(',') : undefined,
       rating: req.query.rating ? Number(req.query.rating) : undefined,
       discount: req.query.discount ? Number(req.query.discount) : undefined,
-      sort: req.query.sort as string || 'newest'
+      sort: req.query.sort as string || 'newest',
+      page: req.query.page ? Number(req.query.page) : 1,
+      limit: req.query.limit ? Number(req.query.limit) : 10
     };
-    const products = await productService.listProducts(filter);
-    console.log(products)
-    res.json(products);
+
+    const { products, total, totalPages } = await productService.listProducts(filter);
+
+    res.json({
+      success: true,
+      page: filter.page,
+      limit: filter.limit,
+      total,
+      totalPages,
+      products
+    });
   } catch (err) {
     next(err);
   }
